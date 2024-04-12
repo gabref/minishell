@@ -1,32 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/12 10:46:40 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/12 10:46:41 by galves-f         ###   ########.fr       */
+/*   Created: 2024/04/12 10:33:51 by galves-f          #+#    #+#             */
+/*   Updated: 2024/04/12 11:00:35 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#ifndef UTILS_H
+# define UTILS_H
 
-void	init_minishell(t_minishell *msh)
-{
-	msh->ebt = NULL;
-	msh->env = NULL;
-	msh->pid = getpid();
-	msh->pids = NULL;
-	msh->history = (t_history){
-		.inputs = NULL,
-		.cur_idx = 0,
-	};
-	msh->last_exit_status = 0;
-}
+# include <limits.h>
+# include <stdio.h>
+# include <stdlib.h>
 
-void	destroy_minishell(t_minishell *msh)
-{
-	(void)msh;
-	return ;
-}
+# define MSG_ERR_ARGS "Error\nThis program doesn\'t accept arguments!!\n"
+
+void	print_welcome(void);
+
+#endif

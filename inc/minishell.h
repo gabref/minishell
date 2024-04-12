@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 08:55:48 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/12 10:10:17 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/04/12 10:40:48 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "../libs/libft/inc/libft.h"
+# include "../libs/ft_printf/inc/ft_printf.h"
 # include <stdio.h>
 
 /*
