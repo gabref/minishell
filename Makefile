@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/04/12 10:59:55 by galves-f         ###   ########.fr        #
+#    Updated: 2024/04/12 13:00:21 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,7 @@ SRCS_PATH		= src
 INCLUDE_PATH	= inc
 
 SRCS 			= initializer/init.c \
+				  initializer/envs.c \
 				  utils/prints.c
 
 MAIN			= main.c

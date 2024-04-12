@@ -6,16 +6,17 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:46:40 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/12 10:46:41 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/04/12 13:01:18 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../inc/initializers.h"
 #include "../../inc/minishell.h"
 
-void	init_minishell(t_minishell *msh)
+void	init_minishell(t_minishell *msh, char **env)
 {
 	msh->ebt = NULL;
-	msh->env = NULL;
+	msh->env = get_env_list(env);
 	msh->pid = getpid();
 	msh->pids = NULL;
 	msh->history = (t_history){
