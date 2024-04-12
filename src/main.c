@@ -2,6 +2,9 @@
 
 int main(void)
 {
-	whatever("Hello, World!");
+	t_minishell ms;
+
+	init_minishell(&ms);
+	destroy_minishell(&ms);
 	return (0);
 }

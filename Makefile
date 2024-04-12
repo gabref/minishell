@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/04/03 09:29:14 by galves-f         ###   ########.fr        #
+#    Updated: 2024/04/12 10:12:23 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ SRCS_PATH		= src
 
 INCLUDE_PATH	= inc
 
-SRCS 			= init.c
+SRCS 			= initializer/init.c
 
 MAIN			= main.c
 
@@ -169,6 +169,9 @@ norminette:
 install_libs: $(LIBS_DIR)
 	@$(MAKE) $(LIBFT_DIR)
 	@$(MAKE) $(PRINTF_DIR)
+
+valgrind: all
+	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME)
 
 $(LIBS_DIR):
 	@mkdir -p $(LIBS_DIR)
