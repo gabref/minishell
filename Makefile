@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/04/12 10:12:23 by galves-f         ###   ########.fr        #
+#    Updated: 2024/04/12 10:31:12 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -105,6 +105,8 @@ ifeq ($(shell test $(SRC_COUNT_TOT) -lt 0; echo $$?),0)
 endif
 SRC_COUNT := 0
 SRC_PCT = $(shell expr 100 \* $(SRC_COUNT) / $(SRC_COUNT_TOT))
+
+MAKEFLAGS += --no-print-directory
 
 ################################################################################
 #                                 Makefile rules                             #
