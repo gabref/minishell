@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 08:55:48 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/13 16:24:51 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/04/13 16:56:11 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,13 @@ char				*ms_get_env(t_minishell *ms, char *key);
    else its value is updated
 */
 int					ms_set_env(t_minishell *ms, char *key, char *value);
-
 /* prints to the stdout all the environment variables, like in bash */
 void				print_envs(t_list *env);
+/* appends a user input line to the history */
+void				append_history(t_minishell *ms, char *line);
+/* gets a history line id, if id of history does not exists, returns null */
+char				*get_history_idx(t_minishell *ms, int idx);
+/* for debugging, print the entire history of commands */
+void				print_history(t_minishell *ms);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/04/13 16:20:31 by galves-f         ###   ########.fr        #
+#    Updated: 2024/04/13 16:48:40 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,10 +36,12 @@ INCLUDE_PATH	= inc
 SRCS 			= initializer/init.c \
 				  initializer/envs.c \
 				  initializer/envs_utils.c \
+				  initializer/history.c \
 				  utils/safe_functions.c \
 				  utils/prints.c
 
-MAIN			= main.c
+# MAIN			= main.c
+MAIN			= ../tests/init/main.c
 
 LIBS_DIR 		= libs
 LIBFT_DIR 		= $(LIBS_DIR)/libft

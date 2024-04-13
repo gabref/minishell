@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:46:40 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/13 16:13:17 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/04/13 16:47:05 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,9 @@ static void	destroy_envs(t_minishell *ms)
 	ft_lstclear(&lst, &destroy_env);
 }
 
-void	destroy_minishell(t_minishell *msh)
+void	destroy_minishell(t_minishell *ms)
 {
-	destroy_envs(msh);
+	destroy_history(ms);
+	destroy_envs(ms);
 	return ;
 }
