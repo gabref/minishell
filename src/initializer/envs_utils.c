@@ -6,18 +6,19 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 18:43:55 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/13 09:42:08 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/04/13 16:24:14 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+#include "../../inc/utils.h"
 
 static void	append_env_node(t_list **env_list, char *key, char *value)
 {
 	t_env	*env;
 	t_list	*node;
 
-	env = (t_env *)malloc(sizeof(t_env));
+	env = (t_env *)safe_malloc(sizeof(t_env));
 	env->key = ft_strdup(key);
 	if (!env->key)
 		free(env);
@@ -74,4 +75,16 @@ char	*ms_get_env(t_minishell *ms, char *key)
 		node = node->next;
 	}
 	return (NULL);
+}
+
+void	print_envs(t_list *env)
+{
+	t_env	*env_s;
+
+	while (env)
+	{
+		env_s = (t_env *)env->content;
+		ft_printf("%s=%s\n", env_s->key, env_s->value);
+		env = env->next;
+	}
 }

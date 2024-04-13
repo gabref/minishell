@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 08:55:48 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/13 09:42:02 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/04/13 16:24:51 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,14 @@ void				destroy_minishell(t_minishell *msh);
 
 /* gets the value of a env variable with name key */
 char				*ms_get_env(t_minishell *ms, char *key);
-/* 
-   sets the value of a env variable with name key 
+/*
+   sets the value of a env variable with name key
    if the variable does not exist, it is created
    else its value is updated
 */
-int	ms_set_env(t_minishell *ms, char *key, char *value);
+int					ms_set_env(t_minishell *ms, char *key, char *value);
+
+/* prints to the stdout all the environment variables, like in bash */
+void				print_envs(t_list *env);
 
 #endif

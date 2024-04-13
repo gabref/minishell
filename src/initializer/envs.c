@@ -6,12 +6,13 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 12:57:52 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/12 12:58:03 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/04/13 16:21:45 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/initializers.h"
 #include "../../inc/minishell.h"
+#include "../../inc/utils.h"
 
 static char	*get_env(char *var, char **env)
 {
@@ -40,19 +41,21 @@ static t_list	*create_env_node(char *key, char **env)
 {
 	t_env	*env_s;
 	t_list	*node;
+	char	*value;
 
-	env_s = (t_env *)malloc(sizeof(t_env));
-	if (!env_s)
-		return (NULL);
+	env_s = (t_env *)safe_malloc(sizeof(t_env));
 	env_s->key = ft_strdup(key);
 	if (!env_s->key)
 		return (free(env_s), NULL);
-	env_s->value = get_env(key, env);
+	value = get_env(key, env);
+	env_s->value = value;
 	if (ft_strncmp(key, "SHLVL", 5) == 0)
 	{
-		if (env_s == NULL)
+		if (value == NULL)
 			env_s->value = ft_strdup("1");
-		env_s->value = ft_itoa(ft_atoi(env_s->value) + 1);
+		else
+			env_s->value = ft_itoa(ft_atoi(value) + 1);
+		free(value);
 	}
 	node = ft_lstnew(env_s);
 	if (!node)
@@ -60,9 +63,9 @@ static t_list	*create_env_node(char *key, char **env)
 	return (node);
 }
 
-static void append_env_node(t_list **env_list, char *key, char **env)
+static void	append_env_node(t_list **env_list, char *key, char **env)
 {
-	t_list *node;
+	t_list	*node;
 
 	node = create_env_node(key, env);
 	if (node)

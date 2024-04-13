@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:46:40 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/12 18:41:51 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/04/13 16:13:17 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,26 @@ void	init_minishell(t_minishell *msh, char **env)
 	msh->last_exit_status = 0;
 }
 
+static void	destroy_env(void *content)
+{
+	t_env	*env;
+
+	env = (t_env *)content;
+	free(env->key);
+	free(env->value);
+	free(env);
+}
+
+static void	destroy_envs(t_minishell *ms)
+{
+	t_list	*lst;
+
+	lst = ms->env;
+	ft_lstclear(&lst, &destroy_env);
+}
+
 void	destroy_minishell(t_minishell *msh)
 {
-	(void)msh;
+	destroy_envs(msh);
 	return ;
 }
