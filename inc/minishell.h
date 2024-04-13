@@ -6,15 +6,15 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 08:55:48 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/12 12:59:25 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/04/13 09:42:02 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "../libs/libft/inc/libft.h"
 # include "../libs/ft_printf/inc/ft_printf.h"
+# include "../libs/libft/inc/libft.h"
 # include <stdio.h>
 
 /*
@@ -95,5 +95,16 @@ typedef struct s_minishell
 void				init_minishell(t_minishell *msh, char **env);
 /* frees all the memory allocated for the minishell */
 void				destroy_minishell(t_minishell *msh);
+
+/* UTILS */
+
+/* gets the value of a env variable with name key */
+char				*ms_get_env(t_minishell *ms, char *key);
+/* 
+   sets the value of a env variable with name key 
+   if the variable does not exist, it is created
+   else its value is updated
+*/
+int	ms_set_env(t_minishell *ms, char *key, char *value);
 
 #endif
