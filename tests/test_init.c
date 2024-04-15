@@ -45,3 +45,18 @@ Test(init_minishell, history)
 	destroy_history(&ms);
 	cr_assert_null(ms.history.inputs);
 }
+
+Test(init_minishell, envs)
+{
+	char	*env[] = {"PATH=/usr/bin", "PWD=/home", "USER=me", NULL};
+	init_minishell(&ms, env);
+	cr_assert_str_eq(ms_get_env(&ms, "PATH"), "/usr/bin");
+	cr_assert_str_eq(ms_get_env(&ms, "PWD"), "/home");
+	cr_assert_str_eq(ms_get_env(&ms, "USER"), "me");
+	cr_assert_null(ms_get_env(&ms, "LOGPOSE"));
+	cr_assert_null(ms_get_env(&ms, "SHELL"));
+	ms_set_env(&ms, "SHELL", "/bin/sh");
+	ms_set_env(&ms, "LOGPOSE", "whatever");
+	cr_assert_str_eq(ms_get_env(&ms, "SHELL"), "/bin/sh");
+	cr_assert_str_eq(ms_get_env(&ms, "LOGPOSE"), "whatever");
+}

@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:46:02 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/15 16:07:50 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/04/15 17:32:08 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	main(int ac, char **av, char **envp)
 	print_envs(ms.env);
 	ms_set_env(&ms, "PWD", "/home/galves-f");
 	ms_set_env(&ms, "USER", "gian piero");
+	ms_set_env(&ms, "LOGPOSE", "gian piero");
 	ms_set_env(&ms, "LOGPOSE", "gian piero");
 	print_envs(ms.env);
 	append_history(&ms, "ls -l");
