@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/04/13 16:48:40 by galves-f         ###   ########.fr        #
+#    Updated: 2024/04/15 16:07:58 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,8 +40,8 @@ SRCS 			= initializer/init.c \
 				  utils/safe_functions.c \
 				  utils/prints.c
 
-# MAIN			= main.c
-MAIN			= ../tests/init/main.c
+MAIN			= main.c
+# MAIN			= ../tests/init/main.c
 
 LIBS_DIR 		= libs
 LIBFT_DIR 		= $(LIBS_DIR)/libft
@@ -63,6 +63,16 @@ OBJS_B				= $(addprefix objs/, ${SRCS_B:$(FILE_EXTENSION)=.o})
 OBJ_MAIN_B			= $(addprefix objs/, ${MAIN_B:$(FILE_EXTENSION)=.o})
 DEPS_B				= $(addprefix objs/, ${SRCS_B:$(FILE_EXTENSION)=.d})
 DEPS_MAIN_B			= $(addprefix objs/, ${MAIN_B:$(FILE_EXTENSION)=.d})
+
+################################################################################
+#                                Makefile testing                              #
+################################################################################
+
+rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
+TEST = tests
+# TESTS = $(call rwildcard, $(TEST), *.c)
+TESTS = $(wildcard $(TEST)/*.c)
+TESTS_BINS = $(patsubst $(TEST)/%.c, $(TEST)/bin/%, $(TESTS))
 
 ################################################################################
 #                                 Makefile logic                               #
@@ -189,5 +199,17 @@ $(LIBFT_DIR):
 
 $(PRINTF_DIR):
 	@git clone https://github.com/gabref/printf.git $(PRINTF_DIR)
+
+$(TEST)/bin/%: $(TEST)/%.c
+	@$(CC) $(CFLAGS) -I$(INCLUDE_PATH) -o $@ $<  $(OBJS) \
+	-L$(LIBFT_DIR) -L$(PRINTF_DIR) -lft -lftprintf -lcriterion
+
+$(TEST)/bin:
+	@mkdir $@
+
+test: install_libs $(OBJS) $(TEST)/bin $(TESTS_BINS)
+	@for test in $(TESTS_BINS); do \
+		./$$test --verbose; \
+	done
 
 .PHONY:		all clean fclean re header norminette

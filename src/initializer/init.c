@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:46:40 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/13 16:47:05 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/04/15 13:04:29 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ static void	destroy_envs(t_minishell *ms)
 	t_list	*lst;
 
 	lst = ms->env;
-	ft_lstclear(&lst, &destroy_env);
+	if (lst != NULL)
+		ft_lstclear(&lst, &destroy_env);
 }
 
 void	destroy_minishell(t_minishell *ms)

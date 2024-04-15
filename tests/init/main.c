@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:46:02 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/13 16:50:59 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/04/15 16:07:50 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,14 @@ int	main(int ac, char **av, char **envp)
 		ft_printf(RED MSG_ERR_ARGS RST);
 		exit(EXIT_FAILURE);
 	}
-	init_minishell(&ms, envp);
+	(void)envp;
+	init_minishell(&ms, NULL);
 	print_welcome();
-	// print_envs(ms.env);
-	ms_set_env(&ms, "PWD", "gian piero");
+	print_envs(ms.env);
+	ms_set_env(&ms, "PWD", "/home/galves-f");
+	ms_set_env(&ms, "USER", "gian piero");
 	ms_set_env(&ms, "LOGPOSE", "gian piero");
-	// print_envs(ms.env);
+	print_envs(ms.env);
 	append_history(&ms, "ls -l");
 	append_history(&ms, "ls -la");
 	append_history(&ms, "pwd");
