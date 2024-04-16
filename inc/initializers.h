@@ -1,30 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   initializers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/12 10:46:02 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/13 16:40:45 by galves-f         ###   ########.fr       */
+/*   Created: 2024/04/13 16:13:01 by galves-f          #+#    #+#             */
+/*   Updated: 2024/04/13 16:45:53 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/colors.h"
-#include "../inc/minishell.h"
-#include "../inc/utils.h"
+#ifndef INITIALIZERS_H
+# define INITIALIZERS_H
 
-int	main(int ac, char **av, char **envp)
-{
-	t_minishell	ms;
+# include "../libs/libft/inc/libft.h"
+# include "minishell.h"
 
-	if (ac != 1 || av[1])
-	{
-		ft_printf(RED MSG_ERR_ARGS RST);
-		exit(EXIT_FAILURE);
-	}
-	init_minishell(&ms, envp);
-	print_welcome();
-	destroy_minishell(&ms);
-	return (0);
-}
+/* get list of important env variables */
+t_list	*get_env_list(char **env);
+void	destroy_history(t_minishell *ms);
+
+#endif

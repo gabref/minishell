@@ -1,30 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   safe_functions.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/12 10:46:02 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/13 16:40:45 by galves-f         ###   ########.fr       */
+/*   Created: 2024/04/13 16:15:29 by galves-f          #+#    #+#             */
+/*   Updated: 2024/04/13 16:20:01 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/colors.h"
-#include "../inc/minishell.h"
-#include "../inc/utils.h"
+#include "../../inc/colors.h"
+#include "../../inc/utils.h"
+#include "../../libs/ft_printf/inc/ft_printf.h"
 
-int	main(int ac, char **av, char **envp)
+void	*safe_malloc(size_t bytes)
 {
-	t_minishell	ms;
+	void	*ret;
 
-	if (ac != 1 || av[1])
+	ret = malloc(bytes);
+	if (NULL == ret)
 	{
-		ft_printf(RED MSG_ERR_ARGS RST);
+		ft_printf(RED "Error with the malloc, probably your computer memory"
+			"reached its limit and it is going to explode in 3, 2"
+			", 1..." RST);
 		exit(EXIT_FAILURE);
 	}
-	init_minishell(&ms, envp);
-	print_welcome();
-	destroy_minishell(&ms);
-	return (0);
+	return (ret);
 }

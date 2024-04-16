@@ -1,3 +1,12 @@
+# Minishell
+
+## Requirements
+
+Requirements to test de project:
+```bash
+apt-get install libcriterion-dev
+```
+
 # Minishell Research and Planning
 
 ## Repositories
