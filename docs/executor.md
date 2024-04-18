@@ -93,8 +93,8 @@ The tree in a json format representing the structs would look something like thi
 free -h | grep Swap | awk '{print $2}' > myfile && cat < /etc/passwd 2>>myfile | grep root | cut -d : -f6 >> myfile; sort myfile
 ```
 
-```json
-{
+```javascript
+const ebt = {
     command: NULL,
     type: EBT_OP_SEMICOLON,
     left: {
