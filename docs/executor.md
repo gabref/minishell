@@ -80,11 +80,11 @@ In this image is shown a tree with a subshell. For the Subshell, the cd command 
 We can achieve that by passing to the built in function a fake copy of the environment variables.
 We can create a function (copy_env) that will copy the environment variables and pass it to the built-in function when in a subshell.
 
-<img src="../assets/ms-command-subshell-complex.png" width="600" />
+<img src="../assets/ms-command-subshell-complex.png" width="800" />
 
 ### Complex pipeline
 
-<img src="../assets/ms-command-big.png" width="600" />
+<img src="../assets/ms-command-big.png" width="1200" />
 
 
 The tree in a json format representing the structs would look something like this:
