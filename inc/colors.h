@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:45:52 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/12 11:54:42 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/06/14 18:15:24 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@
 # define MAGENTA_BOLD "\033[1;35m"
 # define CYAN_BOLD "\033[1;36m"
 # define WHITE_BOLD "\033[1;37m"
+
+# define SPACES "   "
 
 /* top block */
 # define TB00 "\n \033[94m╔═════════════════════════════════════════"

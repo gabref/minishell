@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/04/15 17:34:21 by galves-f         ###   ########.fr        #
+#    Updated: 2024/06/01 19:20:45 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,11 +37,12 @@ SRCS 			= initializer/init.c \
 				  initializer/envs.c \
 				  initializer/envs_utils.c \
 				  initializer/history.c \
+				  parser/parser.c \
 				  utils/safe_functions.c \
 				  utils/prints.c
 
-MAIN			= main.c
-# MAIN			= ../tests/init/main.c
+# MAIN			= main.c
+MAIN			= ../tests/parser/main.c
 
 LIBS_DIR 		= libs
 LIBFT_DIR 		= $(LIBS_DIR)/libft
