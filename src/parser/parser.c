@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 18:25:57 by galves-f          #+#    #+#             */
-/*   Updated: 2024/06/14 19:05:54 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/06/14 19:40:02 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 #include "../../inc/minishell.h"
 #include "../../inc/parser.h"
 #include "../../inc/utils.h"
+
+t_ebt		*parse_binary_expr_semicolon(t_token **tokens);
+t_ebt		*parse_expr(t_token **tokens);
 
 int	not_eof(t_token *token)
 {
@@ -44,6 +47,7 @@ void	expect(t_token **tokens, t_token_type type, char *err_message)
 	if (token->type != type)
 	{
 		ft_printf(RED "Error: %s\n" RST, err_message);
+		// TODO: not exit but gracefully return error
 		exit(1);
 	}
 }
@@ -198,20 +202,30 @@ t_ebt	*parse_command(t_token **tokens)
 	token = eat(tokens);
 	if (token == NULL)
 		return (NULL);
-	if (token->type != WORD)
+	if (token->type != WORD && token->type != O_PARENTHESES)
 	{
 		ft_printf(RED "\nparse error in index: %d - %s" RST,
 			token->input_start_idx, token->value);
 		return (NULL);
 	}
-	command->command = ft_strdup(token->value);
-	while (is_primary_token(*tokens))
+	if (token->type == WORD)
 	{
-		token = eat(tokens);
-		add_string(&command->args, ft_strdup(token->value));
+		command->command = ft_strdup(token->value);
+		while (is_primary_token(*tokens))
+		{
+			token = eat(tokens);
+			add_string(&command->args, ft_strdup(token->value));
+		}
+		ebt = create_ebt();
+		ebt->command = command;
 	}
-	ebt = create_ebt();
-	ebt->command = command;
+	else if (token->type == O_PARENTHESES)
+	{
+		eat(tokens);
+		ebt = parse_expr(tokens);
+		expect(tokens, C_PARENTHESES, "expected ')'");
+		return (ebt);
+	}
 	return (ebt);
 }
 
@@ -249,6 +263,11 @@ t_ebt_op	convert_type_to_ebt_op(t_token_type type)
 	if (type == SEMICOLON)
 		return (EBT_OP_SEMICOLON);
 	return (EBT_OP_COMMAND);
+}
+
+t_ebt	*parse_expr(t_token **tokens)
+{
+	return (parse_binary_expr_semicolon(tokens));
 }
 
 t_ebt	*parse_binary_expr(t_token **tokens)
@@ -292,9 +311,7 @@ t_ebt	*parse_binary_expr_semicolon(t_token **tokens)
 		t_token *operator= eat(tokens);
 		right = parse_binary_expr(tokens);
 		if (right == NULL)
-		{
 			return (left);
-		}
 		ebt = create_ebt();
 		ebt->type = convert_type_to_ebt_op(operator->type);
 		ebt->left = left;
@@ -314,7 +331,7 @@ void	parse(t_minishell *ms, t_lexer *lexer)
 	ebt = NULL;
 	while (not_eof(tokens))
 	{
-		ebt = parse_binary_expr_semicolon(&tokens);
+		ebt = parse_expr(&tokens);
 		if (ebt == NULL)
 			break ;
 	}
