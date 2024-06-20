@@ -1,6 +1,7 @@
 #include "../inc/minishell.h"
 #include "../inc/lexer.h"
 #include "../inc/utils.h"
+#include "../inc/parser.h"
 #include <criterion/criterion.h>
 #include <criterion/internal/assert.h>
 
@@ -44,8 +45,11 @@ int	add_end(t_token **ret, char *str, int start, int end, t_token_type type)
 	return (0);
 }
 
+t_minishell ms;
+
 void suite_setup(void)
 {
+	init_minishell(&ms, NULL);
 	l = safe_malloc(sizeof(t_lexer));
 	l->size = 0;
 	l->tokens = NULL;
@@ -54,6 +58,7 @@ void suite_setup(void)
 void suite_teardown(void)
 {
 	free_lexer(l);
+	destroy_minishell(&ms);
 }
 
 TestSuite(parser, .init=suite_setup, .fini=suite_teardown);
@@ -67,5 +72,7 @@ Test(parser, simple_case)
 	add_end(&l->tokens, ft_strdup("file.txt"), 19, 27, WORD);
 	add_end(&l->tokens, ft_strdup("2>"), 29, 31, OUT_APPEND);
 	add_end(&l->tokens, ft_strdup("error.txt"), 32, 41, WORD);
+
+	parse(&ms, l);
 	cr_assert_not_null(l->tokens);
 }

@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 18:25:57 by galves-f          #+#    #+#             */
-/*   Updated: 2024/06/14 19:40:02 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/06/20 16:12:18 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 
 t_ebt		*parse_binary_expr_semicolon(t_token **tokens);
 t_ebt		*parse_expr(t_token **tokens);
+void		print_token(t_token *token);
+t_ebt_op	convert_type_to_ebt_op(t_token_type type);
 
 int	not_eof(t_token *token)
 {
@@ -83,6 +85,18 @@ char	*convert_ebt_op_to_string(t_ebt_op type)
 	return ("UNKNOWN");
 }
 
+void	print_token(t_token *token)
+{
+	if (token == NULL)
+	{
+		ft_printf("NULL\n");
+		return ;
+	}
+	ft_printf("type: %s, value: %s\n",
+		convert_ebt_op_to_string(convert_type_to_ebt_op(token->type)),
+		token->value);
+}
+
 void	print_command(t_command *command, int level)
 {
 	int	i;
@@ -91,6 +105,11 @@ void	print_command(t_command *command, int level)
 	il = 0;
 	while (il++ < level)
 		ft_printf(SPACES);
+	if (command == NULL)
+	{
+		ft_printf(GREEN_BOLD "COMMAND NULL\n" RST);
+		return ;
+	}
 	ft_printf(GREEN_BOLD "COMMAND: %s\n" RST, command->command);
 	il = 0;
 	while (il++ < level)
@@ -104,7 +123,7 @@ void	print_command(t_command *command, int level)
 		ft_printf(SPACES);
 	ft_printf("\targs: [");
 	i = 0;
-	while (command->args[i])
+	while (command->args && command->args[i])
 	{
 		ft_printf("\"%s\"", command->args[i++]);
 		if (command->args[i])
@@ -195,12 +214,10 @@ t_ebt	*parse_command(t_token **tokens)
 	t_command	*command;
 	t_ebt		*ebt;
 
-	command = safe_malloc(sizeof(t_command));
-	command->args = NULL;
-	command->command = NULL;
-	command->heredoc_file_name = NULL;
-	token = eat(tokens);
-	if (token == NULL)
+	token = peek(*tokens);
+	command = NULL;
+	ebt = NULL;
+	if (token == NULL || token->type == C_PARENTHESES)
 		return (NULL);
 	if (token->type != WORD && token->type != O_PARENTHESES)
 	{
@@ -210,6 +227,11 @@ t_ebt	*parse_command(t_token **tokens)
 	}
 	if (token->type == WORD)
 	{
+		token = eat(tokens);
+		command = safe_malloc(sizeof(t_command));
+		command->args = NULL;
+		command->command = NULL;
+		command->heredoc_file_name = NULL;
 		command->command = ft_strdup(token->value);
 		while (is_primary_token(*tokens))
 		{
@@ -222,8 +244,18 @@ t_ebt	*parse_command(t_token **tokens)
 	else if (token->type == O_PARENTHESES)
 	{
 		eat(tokens);
-		ebt = parse_expr(tokens);
-		expect(tokens, C_PARENTHESES, "expected ')'");
+		if (token->value[0] == '(')
+		{
+			ebt = create_ebt();
+			ebt->type = EBT_OP_SUBSHELL;
+			ebt->left = parse_expr(tokens);
+			expect(tokens, C_PARENTHESES, "expected ')'");
+		}
+		else
+		{
+			ebt = parse_expr(tokens);
+			expect(tokens, C_PARENTHESES, "expected ')'");
+		}
 		return (ebt);
 	}
 	return (ebt);
