@@ -6,13 +6,13 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 16:27:01 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/15 13:05:05 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/11 15:53:48 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	append_history(t_minishell *ms, char *line)
+void	ms_append_history(t_minishell *ms, char *line)
 {
 	t_list	*node;
 	t_list	*new_node;

@@ -29,12 +29,12 @@ Test(init_minishell, create)
 
 Test(init_minishell, history)
 {
-	append_history(&ms, "ls -l");
-	append_history(&ms, "ls -la");
-	append_history(&ms, "pwd");
-	append_history(&ms, "ls -la | grep ciao");
-	append_history(&ms, "bella > stdout");
-	append_history(&ms, "jq {}");
+	ms_append_history(&ms, "ls -l");
+	ms_append_history(&ms, "ls -la");
+	ms_append_history(&ms, "pwd");
+	ms_append_history(&ms, "ls -la | grep ciao");
+	ms_append_history(&ms, "bella > stdout");
+	ms_append_history(&ms, "jq {}");
 	cr_assert_str_eq(ms.history.inputs->content, "jq {}");
 	cr_assert_str_eq(ms.history.inputs->next->content, "bella > stdout");
 	cr_assert_str_eq(get_history_idx(&ms, 0), "jq {}");

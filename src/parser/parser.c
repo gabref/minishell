@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 18:25:57 by galves-f          #+#    #+#             */
-/*   Updated: 2024/06/20 16:12:18 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/23 09:55:04 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,12 +161,27 @@ void	print_ebt(t_ebt *ebt, int level)
 	print_ebt(ebt->right, level + 1);
 }
 
+int is_open_parenthesis(t_token *token)
+{
+	if (token == NULL)
+		return (0);
+	return (token->type == O_SQUARE || token->type == O_CURLY || token->type == O_BRACKETS);
+}
+
+int is_close_parenthesis(t_token *token)
+{
+	if (token == NULL)
+		return (0);
+	return (token->type == C_SQUARE || token->type == C_CURLY || token->type == C_BRACKETS);
+}
+
 int	is_primary_token(t_token *token)
 {
 	if (token == NULL)
 		return (0);
-	return (token->type == WORD || token->type == IN
-		|| token->type == OUT_APPEND || token->type == INSTRUCTION);
+	return (token->type == WORD || token->type == IN || token->type == SINGLE_Q
+		|| token->type == DOUBLE_Q || token->type == OUT_APPEND
+		|| token->type == INSTRUCTION);
 }
 
 int	is_binary_token_semicolon(t_token *token)
@@ -180,7 +195,8 @@ int	is_binary_token(t_token *token)
 {
 	if (token == NULL)
 		return (0);
-	return (token->type == AND || token->type == OR || token->type == PIPE);
+	print_token(token);
+	return (token->type == DAND || token->type == OR || token->type == PIPE);
 }
 
 void	add_string(char ***array, char *str)
@@ -208,18 +224,43 @@ void	add_string(char ***array, char *str)
 	*array = new_array;
 }
 
+void	join_string(char **str, char *to_join)
+{
+	int		i;
+	int		j;
+	char	*new_str;
+
+	i = 0;
+	j = 0;
+	while (*(*str + i))
+		i++;
+	while (to_join[j])
+		j++;
+	new_str = malloc(sizeof(char) * (i + j + 1));
+	i = -1;
+	while (*(*str + ++i))
+		new_str[i] = *(*str + i);
+	free(*str);
+	j = 0;
+	while (to_join[j])
+		new_str[i++] = to_join[j++];
+	new_str[i] = '\0';
+	*str = new_str;
+}
+
 t_ebt	*parse_command(t_token **tokens)
 {
 	t_token		*token;
 	t_command	*command;
 	t_ebt		*ebt;
+	char		*result_arg;
 
 	token = peek(*tokens);
 	command = NULL;
 	ebt = NULL;
-	if (token == NULL || token->type == C_PARENTHESES)
+	if (token == NULL || is_close_parenthesis(token))
 		return (NULL);
-	if (token->type != WORD && token->type != O_PARENTHESES)
+	if (token->type != WORD && !is_open_parenthesis(token))
 	{
 		ft_printf(RED "\nparse error in index: %d - %s" RST,
 			token->input_start_idx, token->value);
@@ -236,20 +277,64 @@ t_ebt	*parse_command(t_token **tokens)
 		while (is_primary_token(*tokens))
 		{
 			token = eat(tokens);
-			add_string(&command->args, ft_strdup(token->value));
+			if (token->type == SINGLE_Q)
+			{
+				result_arg = ft_strdup(token->value);
+				token = eat(tokens);
+				while (token && token->type != SINGLE_Q
+					&& token->type != END_OF_FILE)
+				{
+					join_string(&result_arg, token->value);
+					join_string(&result_arg, " ");
+					token = eat(tokens);
+				}
+				join_string(&result_arg, token->value);
+				add_string(&command->args, result_arg);
+			}
+			else if (token->type == DOUBLE_Q)
+			{
+				result_arg = ft_strdup(token->value);
+				token = eat(tokens);
+				while (token && token->type != DOUBLE_Q
+					&& token->type != END_OF_FILE)
+				{
+					join_string(&result_arg, token->value);
+					join_string(&result_arg, " ");
+					token = eat(tokens);
+				}
+				join_string(&result_arg, token->value);
+				add_string(&command->args, result_arg);
+			}
+			else
+				add_string(&command->args, ft_strdup(token->value));
 		}
 		ebt = create_ebt();
 		ebt->command = command;
 	}
-	else if (token->type == O_PARENTHESES)
+	else if (token->type == O_CURLY || token->type == O_SQUARE
+		|| token->type == O_BRACKETS)
 	{
 		eat(tokens);
-		if (token->value[0] == '(')
+		if (token->type == O_BRACKETS)
 		{
 			ebt = create_ebt();
 			ebt->type = EBT_OP_SUBSHELL;
 			ebt->left = parse_expr(tokens);
-			expect(tokens, C_PARENTHESES, "expected ')'");
+			expect(tokens, token->type + 1, "expected closing bracket");
+		}
+		else if (token->type == O_CURLY)
+		{
+			ebt = create_ebt();
+			ebt->type = EBT_OP_SUBSHELL;
+			ebt->left = parse_expr(tokens);
+			expect(tokens, token->type + 1, "expected closing bracket");
+		}
+		else if (token->type == O_SQUARE)
+		{
+			ebt = create_ebt();
+			ebt->type = EBT_OP_SUBSHELL;
+			ebt->left = parse_expr(tokens);
+			expect(tokens, token->type + 1, "expected closing bracket");
 		}
 		else
 		{

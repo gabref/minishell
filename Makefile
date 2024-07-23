@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/06/01 19:20:45 by galves-f         ###   ########.fr        #
+#    Updated: 2024/07/23 10:16:40 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@
 NAME	= minishell
 CC 		= cc
 CFLAGS	= -Wall -Werror -Wextra -ggdb
+LDFLAGS  = -lreadline
 AUTHOR	= galves-f
 DATE	= 2024/01/24
 
@@ -37,9 +38,26 @@ SRCS 			= initializer/init.c \
 				  initializer/envs.c \
 				  initializer/envs_utils.c \
 				  initializer/history.c \
+				  initializer/input.c \
 				  parser/parser.c \
 				  utils/safe_functions.c \
-				  utils/prints.c
+				  utils/prints.c \
+lexer/lexer.c \
+lexer/lexer_utils.c \
+lexer/mini_lib_1.c \
+lexer/mini_lib_2.c \
+lexer/mini_lib_3.c \
+lexer/token_1.c \
+lexer/token_2.c \
+lexer/token_3.c \
+lexer/token_4.c \
+lexer/tokenizer.c \
+expander/expander.c \
+expander/replacer.c \
+expander/replacer_utils.c \
+expander/temp_tree_creator.c \
+expander/wildcard.c
+
 
 # MAIN			= main.c
 MAIN			= ../tests/parser/main.c
@@ -158,7 +176,7 @@ $(NAME):	install_libs ${OBJS} ${OBJ_MAIN}
 			@make all -C $(LIBFT_DIR)
 			@make all -C $(PRINTF_DIR)
 			@$(CC) $(CFLAGS) -I$(INCLUDE_PATH) -o $@ ${OBJS} ${OBJ_MAIN} \
-			-L$(LIBFT_DIR) -L$(PRINTF_DIR) -lft -lftprintf
+			-L$(LIBFT_DIR) -L$(PRINTF_DIR) -lft -lftprintf $(LDFLAGS) 
 
 objs/%.o: 	$(SRCS_PATH)/%$(FILE_EXTENSION)
 			@mkdir -p $(dir $@)
@@ -202,8 +220,8 @@ $(PRINTF_DIR):
 	@git clone https://github.com/gabref/printf.git $(PRINTF_DIR)
 
 $(TEST)/bin/%: $(TEST)/%.c
-	@$(CC) $(CFLAGS) -I$(INCLUDE_PATH) -o $@ $<  $(OBJS) \
-	-L$(LIBFT_DIR) -L$(PRINTF_DIR) -lft -lftprintf -lcriterion
+	@$(CC) $(CFLAGS) -I$(INCLUDE_PATH) -o $@ $< $(OBJS) \
+	-L$(LIBFT_DIR) -L$(PRINTF_DIR) -lft -lftprintf -lcriterion $(LDFLAGS)
 
 $(TEST)/bin:
 	@mkdir $@

@@ -5,19 +5,19 @@
 
 typedef enum e_token_type
 {
-	/* 0 */ WORD,          /* parola */
-	/* 1 */ O_PARENTHESES, /* (, [, { */
-	/* 2 */ C_PARENTHESES, /* ), ], } */
-	/* 3 */ DOT,           /* . */
-	/* 4 */ SEMICOLON,     /* ; */
-	/* 5 */ COLON,         /* : */
-	/* 6 */ COMMA,         /* , */
-	/* 7 */ MARK,          /* ? e ! */
-	/* 8 */ DOUBLE_Q,      /* " */
-	/* 9 */ SINGLE_Q,      /* ' */
-	/* 10 */ OPERATORS,    /* - e + */
-	/* 11 */ N_LINE,       /* \n */
-	/* 12 */ BSLASH,       /* \ */
+	/* 0  */ WORD,          /* parola */
+	/* 1  */ O_PARENTHESES, /* (, [, { */
+	/* 2  */ C_PARENTHESES, /* ), ], } */
+	/* 3  */ DOT,           /* . */
+	/* 4  */ SEMICOLON,     /* ; */
+	/* 5  */ COLON,         /* : */
+	/* 6  */ COMMA,         /* , */
+	/* 7  */ MARK,          /* ? e ! */
+	/* 8  */ DOUBLE_Q,      /* " */
+	/* 9  */ SINGLE_Q,      /* ' */
+	/* 10 */ OPERATORS,     /* - e + */
+	/* 11 */ N_LINE,        /* \n */
+	/* 12 */ BSLASH,        /* \ */
 	/* 13 */ TILDE,
 	/* 14 */ AND,         /* & */
 	/* 15 */ DAND,        /* && */
@@ -31,7 +31,13 @@ typedef enum e_token_type
 	/* 23 */ HEREDOC,     /* << */
 	/* 24 */ INSTRUCTION, /* set e unset */
 	/* 25 */ GLOB,        /* asterisco + parola che lo segue e che lo precede */
-	/* 26 */ END_OF_FILE
+	/* 26 */ END_OF_FILE,
+	/* 27 */ O_BRACKETS, /* ( */
+	/* 28 */ C_BRACKETS, /* ) */
+	/* 29 */ O_CURLY,    /* { */
+	/* 30 */ C_CURLY,    /* } */
+	/* 31 */ O_SQUARE,   /* [ */
+	/* 32 */ C_SQUARE,   /* ] */
 }					t_token_type;
 
 typedef struct s_token
@@ -105,6 +111,10 @@ int					is_exti_or_cmd_sub(char *trim_input, t_token_type *type);
 int					is_istruction(char *trim_input, t_token_type *type);
 int					is_globe(char *trim_input, t_token_type *type, int *count);
 int					is_word_or_glob(char *trim_input, t_token_type *type,
+						int *count);
+
+/* token_4 */
+int					count_between_quotes(char *trim_input, t_token_type *type,
 						int *count);
 
 #endif

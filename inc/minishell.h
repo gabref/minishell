@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 08:55:48 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/14 01:36:01 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/11 15:53:29 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,15 @@
 # include "../libs/ft_printf/inc/ft_printf.h"
 # include "../libs/libft/inc/libft.h"
 # include <stdio.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <stdarg.h>
+# include <limits.h>
+# include <fcntl.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <stddef.h>
+# include <dirent.h>
 
 /*
  *	t_history
@@ -109,7 +118,7 @@ int					ms_set_env(t_minishell *ms, char *key, char *value);
 /* prints to the stdout all the environment variables, like in bash */
 void				print_envs(t_list *env);
 /* appends a user input line to the history */
-void				append_history(t_minishell *ms, char *line);
+void				ms_append_history(t_minishell *ms, char *line);
 /* gets a history line id, if id of history does not exists, returns null */
 char				*get_history_idx(t_minishell *ms, int idx);
 /* for debugging, print the entire history of commands */
