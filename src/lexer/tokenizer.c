@@ -58,7 +58,6 @@ int	token_finder(char *trim_input, t_token_type *type)
 {
 	int	count;
 
-	printf("trim_input: %s\n", trim_input);
 	if (token_util_one(trim_input, type))
 		return (0);
 	else if (token_util_two(trim_input, type) == 1)

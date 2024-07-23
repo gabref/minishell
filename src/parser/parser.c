@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 18:25:57 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/23 11:16:19 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/23 11:28:46 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,7 +254,6 @@ t_ebt	*parse_command(t_token **tokens)
 	t_token		*token;
 	t_command	*command;
 	t_ebt		*ebt;
-	char		*result_arg;
 
 	token = peek(*tokens);
 	command = NULL;
@@ -269,6 +268,7 @@ t_ebt	*parse_command(t_token **tokens)
 	}
 	if (token->type == WORD)
 	{
+		ft_printf("parsing_command: %s\n", token->value);
 		token = eat(tokens);
 		command = safe_malloc(sizeof(t_command));
 		command->args = NULL;
@@ -282,6 +282,7 @@ t_ebt	*parse_command(t_token **tokens)
 		}
 		ebt = create_ebt();
 		ebt->command = command;
+		print_command(command, 0);
 	}
 	else if (token->type == O_CURLY || token->type == O_SQUARE
 		|| token->type == O_BRACKETS)
@@ -289,6 +290,7 @@ t_ebt	*parse_command(t_token **tokens)
 		eat(tokens);
 		if (token->type == O_BRACKETS)
 		{
+			printf("parsing brackets\n");
 			ebt = create_ebt();
 			ebt->type = EBT_OP_SUBSHELL;
 			ebt->left = parse_expr(tokens);
@@ -296,6 +298,7 @@ t_ebt	*parse_command(t_token **tokens)
 		}
 		else if (token->type == O_CURLY)
 		{
+			printf("parsing curly\n");
 			ebt = create_ebt();
 			ebt->type = EBT_OP_SUBSHELL;
 			ebt->left = parse_expr(tokens);
@@ -303,6 +306,7 @@ t_ebt	*parse_command(t_token **tokens)
 		}
 		else if (token->type == O_SQUARE)
 		{
+			printf("parsing square\n");
 			ebt = create_ebt();
 			ebt->type = EBT_OP_SUBSHELL;
 			ebt->left = parse_expr(tokens);
