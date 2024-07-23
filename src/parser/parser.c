@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 18:25:57 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/23 09:55:04 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/23 11:16:19 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ void	expect(t_token **tokens, t_token_type type, char *err_message)
 	token = eat(tokens);
 	if (token->type != type)
 	{
-		ft_printf(RED "Error: %s\n" RST, err_message);
+		ft_printf(RED "Error: %s\n", err_message);
+		ft_printf("got: %s\n" RST, token->value);
 		// TODO: not exit but gracefully return error
 		exit(1);
 	}
@@ -277,36 +278,7 @@ t_ebt	*parse_command(t_token **tokens)
 		while (is_primary_token(*tokens))
 		{
 			token = eat(tokens);
-			if (token->type == SINGLE_Q)
-			{
-				result_arg = ft_strdup(token->value);
-				token = eat(tokens);
-				while (token && token->type != SINGLE_Q
-					&& token->type != END_OF_FILE)
-				{
-					join_string(&result_arg, token->value);
-					join_string(&result_arg, " ");
-					token = eat(tokens);
-				}
-				join_string(&result_arg, token->value);
-				add_string(&command->args, result_arg);
-			}
-			else if (token->type == DOUBLE_Q)
-			{
-				result_arg = ft_strdup(token->value);
-				token = eat(tokens);
-				while (token && token->type != DOUBLE_Q
-					&& token->type != END_OF_FILE)
-				{
-					join_string(&result_arg, token->value);
-					join_string(&result_arg, " ");
-					token = eat(tokens);
-				}
-				join_string(&result_arg, token->value);
-				add_string(&command->args, result_arg);
-			}
-			else
-				add_string(&command->args, ft_strdup(token->value));
+			add_string(&command->args, ft_strdup(token->value));
 		}
 		ebt = create_ebt();
 		ebt->command = command;
@@ -327,14 +299,14 @@ t_ebt	*parse_command(t_token **tokens)
 			ebt = create_ebt();
 			ebt->type = EBT_OP_SUBSHELL;
 			ebt->left = parse_expr(tokens);
-			expect(tokens, token->type + 1, "expected closing bracket");
+			expect(tokens, token->type + 1, "expected closing curly bracket");
 		}
 		else if (token->type == O_SQUARE)
 		{
 			ebt = create_ebt();
 			ebt->type = EBT_OP_SUBSHELL;
 			ebt->left = parse_expr(tokens);
-			expect(tokens, token->type + 1, "expected closing bracket");
+			expect(tokens, token->type + 1, "expected closing square bracket");
 		}
 		else
 		{
