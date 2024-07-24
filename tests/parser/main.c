@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 14:36:04 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/24 16:52:05 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/25 00:09:54 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,10 @@ void	lexer_tests(t_minishell *ms)
 	// lex = lexer("(({ ls; }))");
 	// lex = lexer("echo ciao > temp.txt");
 	// lex = lexer(";;");
-	// lex = lexer("echo << bella > ciao >> myfile && cat < myfile; ls >> myfile > ciao < myfile");
-	lex = lexer("<< bella");
+	// lex = lexer("echo ciao << bella > ciao >> myfile && cat < myfile; ls >> myfile > ciao < myfile");
+	// lex = lexer("<< bella > myfile");
+	lex = lexer("> cool_file");
+	// lex = lexer(">");
 
 	ms_print_lexer(lex);
 	parse(ms, lex);

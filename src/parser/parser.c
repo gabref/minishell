@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 18:25:57 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/24 16:59:14 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/25 00:10:40 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	*expect(t_token **tokens, t_token_type type, char *err_message)
 		ft_printf(RED "Error: %s\n", err_message);
 		ft_printf("got: %s\n" RST, token->value);
 		set_global_error(1);
-		return NULL;
+		return (NULL);
 	}
 	return (token);
 }
@@ -137,8 +137,6 @@ void	print_command(t_command *command, int level)
 		ft_printf(SPACES);
 	if (command->heredoc_word)
 		ft_printf("\theredoc word: %s\n", command->heredoc_word);
-	else
-		ft_printf("\theredoc word: NULL\n");
 	il = 0;
 	while (il++ < level)
 		ft_printf(SPACES);
@@ -304,18 +302,15 @@ t_ebt	*parse_command(t_token **tokens)
 	ebt = NULL;
 	if (token == NULL || is_close_parenthesis(token))
 		return (NULL);
-	if (token->type != WORD && !is_open_parenthesis(token) && !is_angle_bracket(token))
+	if (token->type != WORD && !is_open_parenthesis(token)
+		&& !is_angle_bracket(token))
 	{
 		set_global_error(1);
 		ft_printf(RED "\nparse error in index: %d - %s" RST,
 			token->input_start_idx, token->value);
 		return (NULL);
 	}
-	if (is_angle_bracket(token))
-	{
-		token = eat(tokens);
-	}
-	if (token->type == WORD)
+	if (token->type == WORD || is_angle_bracket(token))
 	{
 		token = eat(tokens);
 		command = safe_malloc(sizeof(t_command));
@@ -324,7 +319,44 @@ t_ebt	*parse_command(t_token **tokens)
 		command->heredoc = false;
 		command->heredoc_word = NULL;
 		command->redirections = NULL;
-		command->command = ft_strdup(token->value);
+		command->command = NULL;
+		if (token->type == WORD)
+			command->command = ft_strdup(token->value);
+		else if (token->type == O_ANGLE_BRACKET
+			|| token->type == C_DANGLE_BRACKET)
+		{
+			set_global_error(1);
+			ft_printf(RED "Error: unexpected token '%s'\n" RST, token->value);
+			return (NULL);
+		}
+		else if (token->type == O_DANGLE_BRACKET)
+		{
+			token = eat(tokens);
+			command->heredoc = true;
+			if (token != NULL && token->type == WORD)
+				command->heredoc_word = ft_strdup(token->value);
+			else
+			{
+				set_global_error(1);
+				ft_printf(RED "Error: expected command after '<<'\n" RST);
+				return (NULL);
+			}
+		}
+		else if (token->type == C_ANGLE_BRACKET)
+		{
+			redir = safe_malloc(sizeof(t_redir));
+			redir->from = RT_STDOUT;
+			redir->to = RT_WRITE;
+			token = eat(tokens);
+			if (token == NULL || token->value == NULL)
+			{
+				set_global_error(1);
+				ft_printf(RED "Error: expected filename after '>'\n" RST);
+				return (NULL);
+			}
+			redir->filename = ft_strdup(token->value);
+			command->redirections = ft_lstnew(redir);
+		}
 		while (is_primary_token(*tokens))
 		{
 			if (is_angle_bracket(*tokens))
@@ -412,9 +444,10 @@ t_ebt	*parse_command(t_token **tokens)
 			ebt->left = parse_expr(tokens);
 			if (ebt->left == NULL || !tokens || !*tokens || !(*tokens)->value)
 				if (expect(tokens, token->type + 1,
-					"syntax error near unexpected ')'") == NULL)
+						"syntax error near unexpected ')'") == NULL)
 					return (NULL);
-			if (expect(tokens, token->type + 1, "expected closing bracket") == NULL)
+			if (expect(tokens, token->type + 1,
+					"expected closing bracket") == NULL)
 				return (NULL);
 		}
 		else if (token->type == O_CURLY)
@@ -424,9 +457,10 @@ t_ebt	*parse_command(t_token **tokens)
 			ebt->left = parse_expr(tokens);
 			if (ebt->left == NULL || !tokens || !*tokens || !(*tokens)->value)
 				if (expect(tokens, token->type + 1,
-					"syntax error near unexpected '}'") == NULL)
+						"syntax error near unexpected '}'") == NULL)
 					return (NULL);
-			if (expect(tokens, token->type + 1, "expected closing curly bracket") == NULL)
+			if (expect(tokens, token->type + 1,
+					"expected closing curly bracket") == NULL)
 				return (NULL);
 		}
 		else if (token->type == O_SQUARE)
@@ -436,9 +470,10 @@ t_ebt	*parse_command(t_token **tokens)
 			ebt->left = parse_expr(tokens);
 			if (ebt->left == NULL || !tokens || !*tokens || !(*tokens)->value)
 				if (expect(tokens, token->type + 1,
-					"syntax error near unexpected ']'") == NULL)
+						"syntax error near unexpected ']'") == NULL)
 					return (NULL);
-			if (expect(tokens, token->type + 1, "expected closing square bracket") == NULL)
+			if (expect(tokens, token->type + 1,
+					"expected closing square bracket") == NULL)
 				return (NULL);
 		}
 		else
