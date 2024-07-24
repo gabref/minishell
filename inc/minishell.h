@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 08:55:48 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/11 15:53:29 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/24 13:41:00 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,17 @@
 
 # include "../libs/ft_printf/inc/ft_printf.h"
 # include "../libs/libft/inc/libft.h"
-# include <stdio.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <stdarg.h>
-# include <limits.h>
-# include <fcntl.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <stddef.h>
 # include <dirent.h>
+# include <fcntl.h>
+# include <limits.h>
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <stdarg.h>
+# include <stddef.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <stdbool.h>
 
 /*
  *	t_history
@@ -59,11 +60,30 @@ typedef enum e_ebt_op
 	EBT_OP_COMMAND_SUBS,
 }					t_ebt_op;
 
+typedef enum e_redir_types
+{
+	RT_STDIN,
+	RT_STDOUT,
+	RT_STDERR,
+	RT_WRITE,  // has file
+	RT_APPEND, // has file
+	RT_READ,   // has file
+}					t_red_type;
+
+typedef struct s_redirections
+{
+	t_red_type from; // RT_STDIN, RT_STDOUT, RT_STDERR, RT_READ
+	t_red_type to;   // RT_STDIN, RT_STDOUT, RT_STDERR, RT_WRITE, RT_APPEND
+	char			*filename;
+}					t_redir;
+
 typedef struct s_command
 {
 	char			*command;
 	char			**args;
-	char			*heredoc_file_name;
+	bool			heredoc;
+	char 			*heredoc_word;
+	t_list			*redirections;
 }					t_command;
 
 /*

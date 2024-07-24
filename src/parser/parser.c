@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 18:25:57 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/23 11:28:46 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/24 14:16:00 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,23 @@ t_ebt	*create_ebt(void)
 	return (ebt);
 }
 
+char	*convert_redir_type_to_string(t_red_type type)
+{
+	if (type == RT_STDIN)
+		return ("STDIN");
+	if (type == RT_STDOUT)
+		return ("STDOUT");
+	if (type == RT_STDERR)
+		return ("STDERR");
+	if (type == RT_WRITE)
+		return ("WRITE");
+	if (type == RT_APPEND)
+		return ("APPEND");
+	if (type == RT_READ)
+		return ("READ");
+	return ("UNKNOWN");
+}
+
 char	*convert_ebt_op_to_string(t_ebt_op type)
 {
 	if (type == EBT_OP_OR)
@@ -100,8 +117,10 @@ void	print_token(t_token *token)
 
 void	print_command(t_command *command, int level)
 {
-	int	i;
-	int	il;
+	int		i;
+	int		il;
+	t_list	*redir;
+	t_redir	*r;
 
 	il = 0;
 	while (il++ < level)
@@ -115,10 +134,10 @@ void	print_command(t_command *command, int level)
 	il = 0;
 	while (il++ < level)
 		ft_printf(SPACES);
-	if (command->heredoc_file_name)
-		ft_printf("\theredoc file name: %s\n", command->heredoc_file_name);
+	if (command->heredoc_word)
+		ft_printf("\theredoc word: %s\n", command->heredoc_word);
 	else
-		ft_printf("\theredoc file name: NULL\n");
+		ft_printf("\theredoc word: NULL\n");
 	il = 0;
 	while (il++ < level)
 		ft_printf(SPACES);
@@ -131,6 +150,18 @@ void	print_command(t_command *command, int level)
 			ft_printf(", ");
 	}
 	ft_printf("]\n");
+	redir = command->redirections;
+	while (redir)
+	{
+		r = (t_redir *)redir->content;
+		il = 0;
+		while (il++ < level)
+			ft_printf(SPACES);
+		ft_printf("\t{ redir: from: %s\tto: %s\tfilename: %s }\n",
+			convert_redir_type_to_string(r->from),
+			convert_redir_type_to_string(r->to), r->filename);
+		redir = redir->next;
+	}
 }
 
 void	print_ebt(t_ebt *ebt, int level)
@@ -162,27 +193,38 @@ void	print_ebt(t_ebt *ebt, int level)
 	print_ebt(ebt->right, level + 1);
 }
 
-int is_open_parenthesis(t_token *token)
+int	is_open_parenthesis(t_token *token)
 {
 	if (token == NULL)
 		return (0);
-	return (token->type == O_SQUARE || token->type == O_CURLY || token->type == O_BRACKETS);
+	return (token->type == O_SQUARE || token->type == O_CURLY
+		|| token->type == O_BRACKETS);
 }
 
-int is_close_parenthesis(t_token *token)
+int	is_close_parenthesis(t_token *token)
 {
 	if (token == NULL)
 		return (0);
-	return (token->type == C_SQUARE || token->type == C_CURLY || token->type == C_BRACKETS);
+	return (token->type == C_SQUARE || token->type == C_CURLY
+		|| token->type == C_BRACKETS);
 }
 
 int	is_primary_token(t_token *token)
 {
 	if (token == NULL)
 		return (0);
-	return (token->type == WORD || token->type == IN || token->type == SINGLE_Q
-		|| token->type == DOUBLE_Q || token->type == OUT_APPEND
-		|| token->type == INSTRUCTION);
+	return (token->type == WORD || token->type == SINGLE_Q
+		|| token->type == DOUBLE_Q || token->type == INSTRUCTION
+		|| token->type == O_ANGLE_BRACKET || token->type == C_ANGLE_BRACKET
+		|| token->type == O_DANGLE_BRACKET || token->type == C_DANGLE_BRACKET);
+}
+
+int	is_angle_bracket(t_token *token)
+{
+	if (token == NULL)
+		return (0);
+	return (token->type == O_ANGLE_BRACKET || token->type == C_ANGLE_BRACKET
+		|| token->type == O_DANGLE_BRACKET || token->type == C_DANGLE_BRACKET);
 }
 
 int	is_binary_token_semicolon(t_token *token)
@@ -254,6 +296,7 @@ t_ebt	*parse_command(t_token **tokens)
 	t_token		*token;
 	t_command	*command;
 	t_ebt		*ebt;
+	t_redir		*redir;
 
 	token = peek(*tokens);
 	command = NULL;
@@ -268,21 +311,85 @@ t_ebt	*parse_command(t_token **tokens)
 	}
 	if (token->type == WORD)
 	{
-		ft_printf("parsing_command: %s\n", token->value);
 		token = eat(tokens);
 		command = safe_malloc(sizeof(t_command));
 		command->args = NULL;
 		command->command = NULL;
-		command->heredoc_file_name = NULL;
+		command->heredoc = false;
+		command->heredoc_word = NULL;
+		command->redirections = NULL;
 		command->command = ft_strdup(token->value);
 		while (is_primary_token(*tokens))
 		{
-			token = eat(tokens);
-			add_string(&command->args, ft_strdup(token->value));
+			if (is_angle_bracket(*tokens))
+			{
+				token = eat(tokens);
+				redir = safe_malloc(sizeof(t_redir));
+				redir->filename = NULL;
+				redir->from = RT_STDIN;
+				redir->to = RT_STDOUT;
+				if (token->type == O_ANGLE_BRACKET)
+				{
+					redir->from = RT_READ;
+					redir->to = RT_STDIN;
+					token = eat(tokens);
+					if (token == NULL || token->value == NULL)
+					{
+						ft_printf(RED "Error: expected filename after '<'\n" RST);
+						return (NULL);
+					}
+					redir->filename = ft_strdup(token->value);
+				}
+				else if (token->type == C_ANGLE_BRACKET)
+				{
+					redir->from = RT_STDOUT;
+					redir->to = RT_WRITE;
+					token = eat(tokens);
+					if (token == NULL || token->value == NULL)
+					{
+						ft_printf(RED "Error: expected filename after '>'\n" RST);
+						return (NULL);
+					}
+					redir->filename = ft_strdup(token->value);
+				}
+				else if (token->type == O_DANGLE_BRACKET)
+				{
+					command->heredoc = true;
+					token = eat(tokens);
+					if (token == NULL || token->value == NULL)
+					{
+						ft_printf(RED "Error: expected filename after '>'\n" RST);
+						return (NULL);
+					}
+					command->heredoc_word = ft_strdup(token->value);
+					free(redir);
+					continue ;
+				}
+				else if (token->type == C_DANGLE_BRACKET)
+				{
+					redir->from = RT_STDOUT;
+					redir->to = RT_APPEND;
+					token = eat(tokens);
+					if (token == NULL || token->value == NULL)
+					{
+						ft_printf(RED "Error: expected filename after '>'\n" RST);
+						return (NULL);
+					}
+					redir->filename = ft_strdup(token->value);
+				}
+				if (command->redirections == NULL)
+					command->redirections = ft_lstnew(redir);
+				else
+					ft_lstadd_back(&command->redirections, ft_lstnew(redir));
+			}
+			else
+			{
+				token = eat(tokens);
+				add_string(&command->args, ft_strdup(token->value));
+			}
 		}
 		ebt = create_ebt();
 		ebt->command = command;
-		print_command(command, 0);
 	}
 	else if (token->type == O_CURLY || token->type == O_SQUARE
 		|| token->type == O_BRACKETS)
@@ -294,6 +401,9 @@ t_ebt	*parse_command(t_token **tokens)
 			ebt = create_ebt();
 			ebt->type = EBT_OP_SUBSHELL;
 			ebt->left = parse_expr(tokens);
+			if (ebt->left == NULL || !tokens || !*tokens || !(*tokens)->value)
+				expect(tokens, token->type + 1,
+					"syntax error near unexpected ')'");
 			expect(tokens, token->type + 1, "expected closing bracket");
 		}
 		else if (token->type == O_CURLY)
@@ -302,6 +412,9 @@ t_ebt	*parse_command(t_token **tokens)
 			ebt = create_ebt();
 			ebt->type = EBT_OP_SUBSHELL;
 			ebt->left = parse_expr(tokens);
+			if (ebt->left == NULL || !tokens || !*tokens || !(*tokens)->value)
+				expect(tokens, token->type + 1,
+					"syntax error near unexpected '}'");
 			expect(tokens, token->type + 1, "expected closing curly bracket");
 		}
 		else if (token->type == O_SQUARE)
@@ -310,6 +423,9 @@ t_ebt	*parse_command(t_token **tokens)
 			ebt = create_ebt();
 			ebt->type = EBT_OP_SUBSHELL;
 			ebt->left = parse_expr(tokens);
+			if (ebt->left == NULL || !tokens || !*tokens || !(*tokens)->value)
+				expect(tokens, token->type + 1,
+					"syntax error near unexpected ']'");
 			expect(tokens, token->type + 1, "expected closing square bracket");
 		}
 		else
@@ -322,12 +438,24 @@ t_ebt	*parse_command(t_token **tokens)
 	return (ebt);
 }
 
+void	free_redirection(void *ptr)
+{
+	t_redir	*redir;
+
+	redir = (t_redir *)ptr;
+	if (redir->filename)
+		free(redir->filename);
+	free(redir);
+}
+
 void	free_command(t_command *command)
 {
 	if (command->command)
 		free(command->command);
-	if (command->heredoc_file_name)
-		free(command->heredoc_file_name);
+	if (command->heredoc_word)
+		free(command->heredoc_word);
+	if (command->redirections)
+		ft_lstclear(&command->redirections, &free_redirection);
 	ft_free_2d_array((void **)command->args);
 	free(command);
 }

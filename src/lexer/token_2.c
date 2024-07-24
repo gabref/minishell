@@ -104,23 +104,22 @@ int	is_redir_or_her(char *trim_input, t_token_type *type)
 {
 	if (trim_input[0] == '>' && trim_input[1] == '>')
 	{
-		*type = OUT_APPEND;
+		*type = C_DANGLE_BRACKET;
 		return (2);
 	}
 	else if (trim_input[0] == '>')
 	{
-		*type = OUT_APPEND;
+		*type = C_ANGLE_BRACKET;
 		return (1);
 	}
 	else if (trim_input[0] == '<' && trim_input[1] == '<')
 	{
-		*type = HEREDOC;
+		*type = O_DANGLE_BRACKET;
 		return (2);
 	}
 	else if (trim_input[0] == '<')
-
 	{
-		*type = IN;
+		*type = O_ANGLE_BRACKET;
 		return (1);
 	}
 	else

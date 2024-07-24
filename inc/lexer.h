@@ -38,6 +38,10 @@ typedef enum e_token_type
 	/* 30 */ C_CURLY,    /* } */
 	/* 31 */ O_SQUARE,   /* [ */
 	/* 32 */ C_SQUARE,   /* ] */
+	/* 33 */ O_ANGLE_BRACKET,  /* > */
+	/* 34 */ C_ANGLE_BRACKET,  /* < */
+	/* 35 */ O_DANGLE_BRACKET, /* << */
+	/* 36 */ C_DANGLE_BRACKET, /* >> */
 }					t_token_type;
 
 typedef struct s_token
