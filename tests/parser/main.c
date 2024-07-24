@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 14:36:04 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/23 11:32:35 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/24 12:10:35 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	lexer_tests(t_minishell *ms)
 	// lex = lexer("netstat -an | grep 'ESTABLISHED' > /tmp/established_connections.txt && echo \"Connections listed successfully\" > /var/log/netstat.log || echo \"Failed to list connections\" > /var/log/netstat_error.log;");
 	// lex = lexer("(date -u) | sed -e 's/ /     /g'");
 	// lex = lexer("(cd ciao && ls || echo \"cd didn work\")");
-	// lex = lexer("df -h | grep '/dev/sda1' | awk '{print $5}' | sed 's/%//' | { read usage; echo \"Disk usage: $usage%\" > /var/log/disk_usage.log; [ $usage -gt 90 ] && echo \"Alert: High disk usage\" | mail -s \"Disk Usage Alert\" admin@example.com; };");
-	lex = lexer("read usage; ls src");
+	lex = lexer("df -h | grep '/dev/sda1' | awk '{print $5}' | sed 's/%//' | { read usage; echo \"Disk usage: $usage%\" > /var/log/disk_usage.log; [ $usage -gt 90 ] && echo \"Alert: High disk usage\" | mail -s \"Disk Usage Alert\" admin@example.com; };");
+	// lex = lexer("read usage; ls src");
 
 	ms_print_lexer(lex);
 	parse(ms, lex);

@@ -117,7 +117,8 @@ int	is_word_or_glob(char *trim_input, t_token_type *type, int *count)
 	if (is_quote(trim_input, type))
 		return (count_between_quotes(trim_input, type, count));
 	while (trim_input[i] != ' ' && trim_input[i] != '\t' && trim_input[i] != ')'
-		&& trim_input[i] != ']' && trim_input[i] != '}' && trim_input[i])
+		&& trim_input[i] != ']' && trim_input[i] != '}' && trim_input[i] != ';'
+		&& trim_input[i])
 		i++;
 	tmp = ft_substr_lex(trim_input, 0, i);
 	if ((strchr_lex(tmp, '[') && trim_input[i] == ']') || (strchr_lex(tmp, '(')
