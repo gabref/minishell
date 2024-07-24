@@ -1,27 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.h                                            :+:      :+:    :+:   */
+/*   globals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/12 10:33:51 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/24 16:47:52 by galves-f         ###   ########.fr       */
+/*   Created: 2024/07/24 16:48:02 by galves-f          #+#    #+#             */
+/*   Updated: 2024/07/24 16:48:04 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#include "../../inc/utils.h"
 
-# include <limits.h>
-# include <stdio.h>
-# include <stdlib.h>
+static int g_global_error= 0;
 
-# define MSG_ERR_ARGS "Error\nThis program doesn\'t accept arguments!!\n"
+void				set_global_error(int error_code)
+{
+	g_global_error = error_code;
+}
 
-void	print_welcome(void);
-void	*safe_malloc(size_t bytes);
-int		get_global_error(void);
-void	set_global_error(int error_code);
-
-#endif
+int get_global_error()
+{
+	return (g_global_error);
+}

@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/07/23 10:16:40 by galves-f         ###   ########.fr        #
+#    Updated: 2024/07/24 16:48:17 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,7 @@ SRCS 			= initializer/init.c \
 				  parser/parser.c \
 				  utils/safe_functions.c \
 				  utils/prints.c \
+				  utils/globals.c \
 lexer/lexer.c \
 lexer/lexer_utils.c \
 lexer/mini_lib_1.c \

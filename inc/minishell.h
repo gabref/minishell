@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 08:55:48 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/24 13:41:00 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/24 16:33:28 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdarg.h>
+# include <stdbool.h>
 # include <stddef.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include <stdbool.h>
 
 /*
  *	t_history
@@ -82,7 +82,7 @@ typedef struct s_command
 	char			*command;
 	char			**args;
 	bool			heredoc;
-	char 			*heredoc_word;
+	char			*heredoc_word;
 	t_list			*redirections;
 }					t_command;
 
@@ -143,5 +143,8 @@ void				ms_append_history(t_minishell *ms, char *line);
 char				*get_history_idx(t_minishell *ms, int idx);
 /* for debugging, print the entire history of commands */
 void				print_history(t_minishell *ms);
+
+void				set_global_error(int error_code);
+int					get_global_error(void);
 
 #endif

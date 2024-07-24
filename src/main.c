@@ -6,14 +6,14 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:46:02 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/11 17:11:21 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/24 16:47:10 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/colors.h"
-#include "../inc/minishell.h"
-#include "../inc/lexer.h"
 #include "../inc/initializers.h"
+#include "../inc/lexer.h"
+#include "../inc/minishell.h"
 #include "../inc/utils.h"
 
 int	main(int ac, char **av, char **envp)

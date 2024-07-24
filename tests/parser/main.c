@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 14:36:04 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/24 14:08:46 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/24 16:52:05 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,11 @@ void	lexer_tests(t_minishell *ms)
 	// lex = lexer("netstat -an | grep 'ESTABLISHED' > /tmp/established_connections.txt && echo \"Connections listed successfully\" > /var/log/netstat.log || echo \"Failed to list connections\" > /var/log/netstat_error.log");
 	// lex = lexer("(date -u) | sed -e 's/ /     /g'");
 	// lex = lexer("(cd ciao && ls || echo \"cd didn work\")");
-	// lex = lexer("read usage; ls src");
-	// simple command with inner branckets
 	// lex = lexer("(({ ls; }))");
 	// lex = lexer("echo ciao > temp.txt");
 	// lex = lexer(";;");
-	lex = lexer("echo << bella > ciao >> myfile && cat < myfile; ls >> myfile > ciao < myfile");
+	// lex = lexer("echo << bella > ciao >> myfile && cat < myfile; ls >> myfile > ciao < myfile");
+	lex = lexer("<< bella");
 
 	ms_print_lexer(lex);
 	parse(ms, lex);
