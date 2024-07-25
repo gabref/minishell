@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 14:36:04 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/25 12:06:14 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/25 16:32:13 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,21 @@ void	lexer_tests(t_minishell *ms)
 	// lex = lexer("(date -u) | sed -e 's/ /     /g'");
 	// lex = lexer("(cd ciao && ls || echo \"cd didn work\")");
 	// lex = lexer("(({ ls; }))");
-	lex = lexer("echo ciao$USER > temp.txt");
 	// lex = lexer(";;");
 	// lex = lexer("echo ciao << bella > ciao >> myfile && cat < myfile; ls >> myfile > ciao < myfile");
 	// lex = lexer("<< bella > myfile");
 	// lex = lexer("> cool_file");
 	// lex = lexer(">");
 	// lex = lexer("cd $(pwd)");
+	// lex = lexer("mkdir -p src ciao bella oi && ls -l src && echo \"ciao\" || echo \"bella\" | echo \"oi\" && echo \"\"");
+	lex = lexer("ls $PWD/$PATH/ciao $USER '$USER' \"$USER\" ciao$USER \\$USER && ls $PD/$PTH/ciao $USR '$USR' \"$USR\" ciao$USR \\$USR");
 
+	ms_print_lexer(lex);
+	expander(ms, lex);
 	ms_print_lexer(lex);
 	parser = parse(ms, lex);
 	free_lexer(lex);
 	ms->ebt = parser;
-	print_ebt(ms->ebt, 0);
-	expander(ms);
 	print_ebt(ms->ebt, 0);
 }
 

@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/07/25 00:20:06 by galves-f         ###   ########.fr        #
+#    Updated: 2024/07/25 12:47:29 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,22 +43,17 @@ SRCS 			= initializer/init.c \
 				  utils/safe_functions.c \
 				  utils/prints.c \
 				  utils/globals.c \
-lexer/lexer.c \
-lexer/lexer_utils.c \
-lexer/mini_lib_1.c \
-lexer/mini_lib_2.c \
-lexer/mini_lib_3.c \
-lexer/token_1.c \
-lexer/token_2.c \
-lexer/token_3.c \
-lexer/token_4.c \
-lexer/tokenizer.c \
-expander/expander.c \
-expander/replacer.c \
-expander/replacer_utils.c \
-expander/temp_tree_creator.c \
-expander/wildcard.c
-
+  				  lexer/lexer.c \
+  				  lexer/lexer_utils.c \
+  				  lexer/mini_lib_1.c \
+  				  lexer/mini_lib_2.c \
+  				  lexer/mini_lib_3.c \
+  				  lexer/token_1.c \
+  				  lexer/token_2.c \
+  				  lexer/token_3.c \
+  				  lexer/token_4.c \
+  				  lexer/tokenizer.c \
+  				  expander/expander.c \
 
 # MAIN			= main.c
 MAIN			= ../tests/parser/main.c

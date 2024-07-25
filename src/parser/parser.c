@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 18:25:57 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/25 12:04:32 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/25 16:08:36 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,8 +214,8 @@ int	is_primary_token(t_token *token)
 		return (0);
 	return (token->type == WORD || token->type == INSTRUCTION
 		|| token->type == DOLLAR || token->type == EXIT_STATUS
-		|| token->type == CMD_SUB || token->type == C_BRACKETS
-		|| token->type == SINGLE_Q || token->type == DOUBLE_Q
+		|| token->type == CMD_SUB || token->type == SINGLE_Q
+		|| token->type == DOUBLE_Q || token->type == BSLASH
 		|| token->type == O_ANGLE_BRACKET || token->type == C_ANGLE_BRACKET
 		|| token->type == O_DANGLE_BRACKET || token->type == C_DANGLE_BRACKET);
 }
@@ -302,7 +302,12 @@ t_ebt	*parse_command(t_token **tokens)
 	command = NULL;
 	ebt = NULL;
 	if (token == NULL || is_close_parenthesis(token))
+	{
+		set_global_error(1);
+		ft_printf(RED "\nparse error in index: %d - %s" RST,
+			token->input_start_idx, token->value);
 		return (NULL);
+	}
 	if (token->type != WORD && !is_open_parenthesis(token)
 		&& !is_angle_bracket(token))
 	{
@@ -424,6 +429,11 @@ t_ebt	*parse_command(t_token **tokens)
 					command->redirections = ft_lstnew(redir);
 				else
 					ft_lstadd_back(&command->redirections, ft_lstnew(redir));
+			}
+			else if (peek(*tokens)->type == BSLASH)
+			{
+				token = eat(tokens);
+				continue ;
 			}
 			else
 			{
