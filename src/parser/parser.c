@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 18:25:57 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/25 00:10:40 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/25 12:04:32 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,8 +212,10 @@ int	is_primary_token(t_token *token)
 {
 	if (token == NULL)
 		return (0);
-	return (token->type == WORD || token->type == SINGLE_Q
-		|| token->type == DOUBLE_Q || token->type == INSTRUCTION
+	return (token->type == WORD || token->type == INSTRUCTION
+		|| token->type == DOLLAR || token->type == EXIT_STATUS
+		|| token->type == CMD_SUB || token->type == C_BRACKETS
+		|| token->type == SINGLE_Q || token->type == DOUBLE_Q
 		|| token->type == O_ANGLE_BRACKET || token->type == C_ANGLE_BRACKET
 		|| token->type == O_DANGLE_BRACKET || token->type == C_DANGLE_BRACKET);
 }
@@ -237,7 +239,6 @@ int	is_binary_token(t_token *token)
 {
 	if (token == NULL)
 		return (0);
-	print_token(token);
 	return (token->type == DAND || token->type == OR || token->type == PIPE);
 }
 
@@ -524,7 +525,7 @@ void	free_ebt(t_ebt *ebt)
 
 t_ebt_op	convert_type_to_ebt_op(t_token_type type)
 {
-	if (type == AND)
+	if (type == DAND)
 		return (EBT_OP_AND);
 	if (type == OR)
 		return (EBT_OP_OR);
@@ -605,8 +606,5 @@ t_ebt	*parse(t_minishell *ms, t_lexer *lexer)
 		if (ebt == NULL)
 			return (NULL);
 	}
-	// TODO
-	print_ebt(ebt, 0);
-	free_ebt(ebt);
 	return (ebt);
 }

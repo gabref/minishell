@@ -9,7 +9,7 @@ static int	arg_expander(t_minishell *ms, t_ebt *root)
 	int	i;
 
 	i = -1;
-	while (root->command->args[++i] != NULL)
+	while (root->command->args && root->command->args[++i] != NULL)
 	{
 		if (arg_replace(ms, &root->command->args[i]) == -1)
 		{

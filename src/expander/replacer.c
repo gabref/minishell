@@ -179,6 +179,5 @@ int	arg_replace(t_minishell *ms, char **arg)
 		free(*arg);
 		*arg = new_arg;
 	}
-
 	return (0);
 }

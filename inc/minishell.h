@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 08:55:48 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/24 16:33:28 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/25 00:36:07 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ typedef enum e_redir_types
 	RT_STDIN,
 	RT_STDOUT,
 	RT_STDERR,
+	RT_HEREDOC,
 	RT_WRITE,  // has file
 	RT_APPEND, // has file
 	RT_READ,   // has file

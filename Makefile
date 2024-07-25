@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/07/24 16:48:17 by galves-f         ###   ########.fr        #
+#    Updated: 2024/07/25 00:20:06 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@
 NAME	= minishell
 CC 		= cc
 CFLAGS	= -Wall -Werror -Wextra -ggdb
-LDFLAGS  = -lreadline
+LDFLAGS = -lreadline
 AUTHOR	= galves-f
 DATE	= 2024/01/24
 
