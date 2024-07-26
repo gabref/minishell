@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 14:36:04 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/25 16:32:13 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/26 07:24:50 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,10 @@ void	lexer_tests(t_minishell *ms)
 	// lex = lexer(">");
 	// lex = lexer("cd $(pwd)");
 	// lex = lexer("mkdir -p src ciao bella oi && ls -l src && echo \"ciao\" || echo \"bella\" | echo \"oi\" && echo \"\"");
-	lex = lexer("ls $PWD/$PATH/ciao $USER '$USER' \"$USER\" ciao$USER \\$USER && ls $PD/$PTH/ciao $USR '$USR' \"$USR\" ciao$USR \\$USR");
+	lex = lexer("ls $PWD/$PATH/ciao $USER '$USER' \"$USER\" \"\\$USER\" ciao$USER \\$USER && ls $PD/$PTH/ciao $USR '$USR' \"$USR\" \"\\$USR\" ciao$USR \\$USR");
+	// lex = lexer("ls ciao/$PD");
 
-	ms_print_lexer(lex);
 	expander(ms, lex);
-	ms_print_lexer(lex);
 	parser = parse(ms, lex);
 	free_lexer(lex);
 	ms->ebt = parser;
