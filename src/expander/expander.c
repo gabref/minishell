@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 12:47:43 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/26 07:25:00 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/26 07:41:28 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,12 @@ t_lexer	*expander(t_minishell *ms, t_lexer *lex)
 	token = lex->tokens;
 	while (token)
 	{
+		if (token->type == EXIT_STATUS)
+		{
+			free(token->value);
+			token->type = WORD;
+			token->value = ft_itoa(ms->last_exit_status);
+		}
 		if (token->type != WORD && token->type != DOLLAR)
 		{
 			token = token->next;

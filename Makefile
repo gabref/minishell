@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/07/25 12:47:29 by galves-f         ###   ########.fr        #
+#    Updated: 2024/07/26 07:34:11 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,7 +56,7 @@ SRCS 			= initializer/init.c \
   				  expander/expander.c \
 
 # MAIN			= main.c
-MAIN			= ../tests/parser/main.c
+MAIN			= ../tests/executor/main.c
 
 LIBS_DIR 		= libs
 LIBFT_DIR 		= $(LIBS_DIR)/libft
