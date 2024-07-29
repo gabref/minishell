@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/07/29 21:15:15 by galves-f         ###   ########.fr        #
+#    Updated: 2024/07/29 21:34:07 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,6 +55,7 @@ SRCS 			= initializer/init.c \
   				  lexer/token_4.c \
   				  lexer/tokenizer.c \
   				  expander/expander.c \
+  				  executor/executor.c \
 
 MAIN			= main.c
 # MAIN			= ../tests/parser/main.c
