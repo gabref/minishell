@@ -6,12 +6,13 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:46:40 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/15 13:04:29 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/25 11:14:38 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/initializers.h"
 #include "../../inc/minishell.h"
+#include "../../inc/parser.h"
 
 void	init_minishell(t_minishell *msh, char **env)
 {
@@ -47,6 +48,7 @@ static void	destroy_envs(t_minishell *ms)
 
 void	destroy_minishell(t_minishell *ms)
 {
+	free_ebt(ms->ebt);
 	destroy_history(ms);
 	destroy_envs(ms);
 	return ;

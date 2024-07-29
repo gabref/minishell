@@ -6,17 +6,20 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:46:02 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/13 16:40:45 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/25 16:33:04 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/colors.h"
+#include "../inc/initializers.h"
+#include "../inc/lexer.h"
 #include "../inc/minishell.h"
 #include "../inc/utils.h"
 
 int	main(int ac, char **av, char **envp)
 {
 	t_minishell	ms;
+	t_lexer		lex;
 
 	if (ac != 1 || av[1])
 	{
@@ -25,6 +28,8 @@ int	main(int ac, char **av, char **envp)
 	}
 	init_minishell(&ms, envp);
 	print_welcome();
+	get_input(&ms, &lex);
+	// expander(&ms);
 	destroy_minishell(&ms);
 	return (0);
 }

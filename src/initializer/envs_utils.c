@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 18:43:55 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/13 16:26:51 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/25 14:09:44 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char	*ms_get_env(t_minishell *ms, char *key)
 	{
 		env = (t_env *)node->content;
 		if (ft_strncmp(env->key, key, ft_strlen(env->key)) == 0)
-			return (env->value);
+			return (ft_strdup(env->value));
 		node = node->next;
 	}
 	return (NULL);

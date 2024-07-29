@@ -1,27 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.h                                            :+:      :+:    :+:   */
+/*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/12 10:33:51 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/24 16:47:52 by galves-f         ###   ########.fr       */
+/*   Created: 2024/06/01 18:26:57 by galves-f          #+#    #+#             */
+/*   Updated: 2024/07/25 00:16:58 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#ifndef PARSER_H
+# define PARSER_H
 
-# include <limits.h>
-# include <stdio.h>
-# include <stdlib.h>
+# include "lexer.h"
+# include "minishell.h"
 
-# define MSG_ERR_ARGS "Error\nThis program doesn\'t accept arguments!!\n"
-
-void	print_welcome(void);
-void	*safe_malloc(size_t bytes);
-int		get_global_error(void);
-void	set_global_error(int error_code);
+t_ebt	*parse(t_minishell *ms, t_lexer *lexer);
+void	print_ebt(t_ebt *ebt, int level);
+void	free_ebt(t_ebt *ebt);
 
 #endif

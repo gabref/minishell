@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 08:55:48 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/14 01:36:01 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/25 00:36:07 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,17 @@
 
 # include "../libs/ft_printf/inc/ft_printf.h"
 # include "../libs/libft/inc/libft.h"
+# include <dirent.h>
+# include <fcntl.h>
+# include <limits.h>
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <stdarg.h>
+# include <stdbool.h>
+# include <stddef.h>
 # include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
 
 /*
  *	t_history
@@ -50,11 +60,31 @@ typedef enum e_ebt_op
 	EBT_OP_COMMAND_SUBS,
 }					t_ebt_op;
 
+typedef enum e_redir_types
+{
+	RT_STDIN,
+	RT_STDOUT,
+	RT_STDERR,
+	RT_HEREDOC,
+	RT_WRITE,  // has file
+	RT_APPEND, // has file
+	RT_READ,   // has file
+}					t_red_type;
+
+typedef struct s_redirections
+{
+	t_red_type from; // RT_STDIN, RT_STDOUT, RT_STDERR, RT_READ
+	t_red_type to;   // RT_STDIN, RT_STDOUT, RT_STDERR, RT_WRITE, RT_APPEND
+	char			*filename;
+}					t_redir;
+
 typedef struct s_command
 {
 	char			*command;
 	char			**args;
-	char			*heredoc_file_name;
+	bool			heredoc;
+	char			*heredoc_word;
+	t_list			*redirections;
 }					t_command;
 
 /*
@@ -109,10 +139,13 @@ int					ms_set_env(t_minishell *ms, char *key, char *value);
 /* prints to the stdout all the environment variables, like in bash */
 void				print_envs(t_list *env);
 /* appends a user input line to the history */
-void				append_history(t_minishell *ms, char *line);
+void				ms_append_history(t_minishell *ms, char *line);
 /* gets a history line id, if id of history does not exists, returns null */
 char				*get_history_idx(t_minishell *ms, int idx);
 /* for debugging, print the entire history of commands */
 void				print_history(t_minishell *ms);
+
+void				set_global_error(int error_code);
+int					get_global_error(void);
 
 #endif
