@@ -1,25 +1,13 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   globals.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/24 16:48:02 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/24 16:48:04 by galves-f         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../inc/utils.h"
 
-static int g_global_error= 0;
+static int g_signal;
 
-void				set_global_error(int error_code)
+void set_global_signal(int signum)
 {
-	g_global_error = error_code;
+	g_signal = signum;
 }
 
-int get_global_error()
+int get_global_signal(void)
 {
-	return (g_global_error);
+	return (g_signal);
 }

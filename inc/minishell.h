@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 08:55:48 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/29 20:26:18 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/29 21:18:42 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,8 +146,5 @@ void				ms_append_history(t_minishell *ms, char *line);
 char				*get_history_idx(t_minishell *ms, int idx);
 /* for debugging, print the entire history of commands */
 void				print_history(t_minishell *ms);
-
-void				set_global_error(int error_code);
-int					get_global_error(void);
 
 #endif

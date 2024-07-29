@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 18:25:57 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/25 16:08:36 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/29 21:13:54 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 #include "../../inc/parser.h"
 #include "../../inc/utils.h"
 
-t_ebt		*parse_binary_expr_semicolon(t_token **tokens);
-t_ebt		*parse_expr(t_token **tokens);
+t_ebt		*parse_binary_expr_semicolon(t_minishell *ms, t_token **tokens);
+t_ebt		*parse_expr(t_minishell *ms, t_token **tokens);
 void		print_token(t_token *token);
 t_ebt_op	convert_type_to_ebt_op(t_token_type type);
 
@@ -41,7 +41,7 @@ t_token	*eat(t_token **tokens)
 	return (token);
 }
 
-void	*expect(t_token **tokens, t_token_type type, char *err_message)
+void	*expect(t_minishell *ms, t_token **tokens, t_token_type type, char *err_message)
 {
 	t_token	*token;
 
@@ -50,7 +50,7 @@ void	*expect(t_token **tokens, t_token_type type, char *err_message)
 	{
 		ft_printf(RED "Error: %s\n", err_message);
 		ft_printf("got: %s\n" RST, token->value);
-		set_global_error(1);
+		ms->last_exit_status = 1;
 		return (NULL);
 	}
 	return (token);
@@ -291,7 +291,7 @@ void	join_string(char **str, char *to_join)
 	*str = new_str;
 }
 
-t_ebt	*parse_command(t_token **tokens)
+t_ebt	*parse_command(t_minishell *ms, t_token **tokens)
 {
 	t_token		*token;
 	t_command	*command;
@@ -303,7 +303,7 @@ t_ebt	*parse_command(t_token **tokens)
 	ebt = NULL;
 	if (token == NULL || is_close_parenthesis(token))
 	{
-		set_global_error(1);
+		ms->last_exit_status = 1;
 		ft_printf(RED "\nparse error in index: %d - %s" RST,
 			token->input_start_idx, token->value);
 		return (NULL);
@@ -311,7 +311,7 @@ t_ebt	*parse_command(t_token **tokens)
 	if (token->type != WORD && !is_open_parenthesis(token)
 		&& !is_angle_bracket(token))
 	{
-		set_global_error(1);
+		ms->last_exit_status = 1;
 		ft_printf(RED "\nparse error in index: %d - %s" RST,
 			token->input_start_idx, token->value);
 		return (NULL);
@@ -331,7 +331,7 @@ t_ebt	*parse_command(t_token **tokens)
 		else if (token->type == O_ANGLE_BRACKET
 			|| token->type == C_DANGLE_BRACKET)
 		{
-			set_global_error(1);
+			ms->last_exit_status = 1;
 			ft_printf(RED "Error: unexpected token '%s'\n" RST, token->value);
 			return (NULL);
 		}
@@ -343,7 +343,7 @@ t_ebt	*parse_command(t_token **tokens)
 				command->heredoc_word = ft_strdup(token->value);
 			else
 			{
-				set_global_error(1);
+				ms->last_exit_status = 1;
 				ft_printf(RED "Error: expected command after '<<'\n" RST);
 				return (NULL);
 			}
@@ -356,7 +356,7 @@ t_ebt	*parse_command(t_token **tokens)
 			token = eat(tokens);
 			if (token == NULL || token->value == NULL)
 			{
-				set_global_error(1);
+				ms->last_exit_status = 1;
 				ft_printf(RED "Error: expected filename after '>'\n" RST);
 				return (NULL);
 			}
@@ -379,7 +379,7 @@ t_ebt	*parse_command(t_token **tokens)
 					token = eat(tokens);
 					if (token == NULL || token->value == NULL)
 					{
-						set_global_error(1);
+						ms->last_exit_status = 1;
 						ft_printf(RED "Error: expected filename after '<'\n" RST);
 						return (NULL);
 					}
@@ -392,7 +392,7 @@ t_ebt	*parse_command(t_token **tokens)
 					token = eat(tokens);
 					if (token == NULL || token->value == NULL)
 					{
-						set_global_error(1);
+						ms->last_exit_status = 1;
 						ft_printf(RED "Error: expected filename after '>'\n" RST);
 						return (NULL);
 					}
@@ -404,7 +404,7 @@ t_ebt	*parse_command(t_token **tokens)
 					token = eat(tokens);
 					if (token == NULL || token->value == NULL)
 					{
-						set_global_error(1);
+						ms->last_exit_status = 1;
 						ft_printf(RED "Error: expected filename after '>'\n" RST);
 						return (NULL);
 					}
@@ -419,7 +419,7 @@ t_ebt	*parse_command(t_token **tokens)
 					token = eat(tokens);
 					if (token == NULL || token->value == NULL)
 					{
-						set_global_error(1);
+						ms->last_exit_status = 1;
 						ft_printf(RED "Error: expected filename after '>'\n" RST);
 						return (NULL);
 					}
@@ -452,12 +452,12 @@ t_ebt	*parse_command(t_token **tokens)
 		{
 			ebt = create_ebt();
 			ebt->type = EBT_OP_SUBSHELL;
-			ebt->left = parse_expr(tokens);
+			ebt->left = parse_expr(ms, tokens);
 			if (ebt->left == NULL || !tokens || !*tokens || !(*tokens)->value)
-				if (expect(tokens, token->type + 1,
+				if (expect(ms, tokens, token->type + 1,
 						"syntax error near unexpected ')'") == NULL)
 					return (NULL);
-			if (expect(tokens, token->type + 1,
+			if (expect(ms, tokens, token->type + 1,
 					"expected closing bracket") == NULL)
 				return (NULL);
 		}
@@ -465,12 +465,12 @@ t_ebt	*parse_command(t_token **tokens)
 		{
 			ebt = create_ebt();
 			ebt->type = EBT_OP_SUBSHELL;
-			ebt->left = parse_expr(tokens);
+			ebt->left = parse_expr(ms, tokens);
 			if (ebt->left == NULL || !tokens || !*tokens || !(*tokens)->value)
-				if (expect(tokens, token->type + 1,
+				if (expect(ms, tokens, token->type + 1,
 						"syntax error near unexpected '}'") == NULL)
 					return (NULL);
-			if (expect(tokens, token->type + 1,
+			if (expect(ms, tokens, token->type + 1,
 					"expected closing curly bracket") == NULL)
 				return (NULL);
 		}
@@ -478,19 +478,19 @@ t_ebt	*parse_command(t_token **tokens)
 		{
 			ebt = create_ebt();
 			ebt->type = EBT_OP_SUBSHELL;
-			ebt->left = parse_expr(tokens);
+			ebt->left = parse_expr(ms, tokens);
 			if (ebt->left == NULL || !tokens || !*tokens || !(*tokens)->value)
-				if (expect(tokens, token->type + 1,
+				if (expect(ms, tokens, token->type + 1,
 						"syntax error near unexpected ']'") == NULL)
 					return (NULL);
-			if (expect(tokens, token->type + 1,
+			if (expect(ms, tokens, token->type + 1,
 					"expected closing square bracket") == NULL)
 				return (NULL);
 		}
 		else
 		{
-			ebt = parse_expr(tokens);
-			if (expect(tokens, C_PARENTHESES, "expected ')'") == NULL)
+			ebt = parse_expr(ms, tokens);
+			if (expect(ms, tokens, C_PARENTHESES, "expected ')'") == NULL)
 				return (NULL);
 		}
 		return (ebt);
@@ -546,24 +546,24 @@ t_ebt_op	convert_type_to_ebt_op(t_token_type type)
 	return (EBT_OP_COMMAND);
 }
 
-t_ebt	*parse_expr(t_token **tokens)
+t_ebt	*parse_expr(t_minishell *ms, t_token **tokens)
 {
-	return (parse_binary_expr_semicolon(tokens));
+	return (parse_binary_expr_semicolon(ms, tokens));
 }
 
-t_ebt	*parse_binary_expr(t_token **tokens)
+t_ebt	*parse_binary_expr(t_minishell *ms, t_token **tokens)
 {
 	t_ebt	*left;
 	t_ebt	*right;
 	t_ebt	*ebt;
 
-	left = parse_command(tokens);
+	left = parse_command(ms, tokens);
 	if (left == NULL)
 		return (NULL);
 	while (is_binary_token(*tokens))
 	{
 		t_token *operator= eat(tokens);
-		right = parse_command(tokens);
+		right = parse_command(ms, tokens);
 		if (right == NULL)
 		{
 			free_ebt(left);
@@ -578,19 +578,19 @@ t_ebt	*parse_binary_expr(t_token **tokens)
 	return (left);
 }
 
-t_ebt	*parse_binary_expr_semicolon(t_token **tokens)
+t_ebt	*parse_binary_expr_semicolon(t_minishell *ms, t_token **tokens)
 {
 	t_ebt	*left;
 	t_ebt	*right;
 	t_ebt	*ebt;
 
-	left = parse_binary_expr(tokens);
+	left = parse_binary_expr(ms, tokens);
 	if (left == NULL)
 		return (NULL);
 	while (is_binary_token_semicolon(*tokens))
 	{
 		t_token *operator= eat(tokens);
-		right = parse_binary_expr(tokens);
+		right = parse_binary_expr(ms, tokens);
 		if (right == NULL)
 			return (left);
 		ebt = create_ebt();
@@ -612,7 +612,7 @@ t_ebt	*parse(t_minishell *ms, t_lexer *lexer)
 	ebt = NULL;
 	while (not_eof(tokens))
 	{
-		ebt = parse_expr(&tokens);
+		ebt = parse_expr(ms, &tokens);
 		if (ebt == NULL)
 			return (NULL);
 	}

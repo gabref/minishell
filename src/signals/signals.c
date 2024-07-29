@@ -1,8 +1,10 @@
 #include "../../inc/minishell.h"
 #include "../../inc/signals.h"
+#include "../../inc/utils.h"
 
 void	handle_signals(int signum)
 {
+	set_global_signal(signum);
 	if (signum == SIGINT)
 	{
 		rl_replace_line("", 0);
