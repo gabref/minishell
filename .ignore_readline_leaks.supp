@@ -1,0 +1,16 @@
+{
+	ignore_readline_leaks
+	Memcheck:Leak
+	...
+	fun:readline
+}
+{
+	ignore_rl_history_leaks
+	Memcheck:Leak
+	...
+
+	fun:add_history
+}
+
+# usage
+# valgrind --suppressions=.ignore_readline_leaks.supp --leak-check=full ./minishell

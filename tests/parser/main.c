@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 14:36:04 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/26 07:24:50 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/29 15:21:33 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ void	lexer_tests(t_minishell *ms)
 	// lex = lexer("netstat -an | grep 'ESTABLISHED' > /tmp/established_connections.txt && echo \"Connections listed successfully\" > /var/log/netstat.log || echo \"Failed to list connections\" > /var/log/netstat_error.log");
 	// lex = lexer("(date -u) | sed -e 's/ /     /g'");
 	// lex = lexer("(cd ciao && ls || echo \"cd didn work\")");
-	// lex = lexer("(({ ls; }))");
+	// lex = lexer("(({ ls }))");
+	// lex = lexer("((()))");
 	// lex = lexer(";;");
 	// lex = lexer("echo ciao << bella > ciao >> myfile && cat < myfile; ls >> myfile > ciao < myfile");
 	// lex = lexer("<< bella > myfile");
@@ -35,8 +36,10 @@ void	lexer_tests(t_minishell *ms)
 	// lex = lexer(">");
 	// lex = lexer("cd $(pwd)");
 	// lex = lexer("mkdir -p src ciao bella oi && ls -l src && echo \"ciao\" || echo \"bella\" | echo \"oi\" && echo \"\"");
-	lex = lexer("ls $PWD/$PATH/ciao $USER '$USER' \"$USER\" \"\\$USER\" ciao$USER \\$USER && ls $PD/$PTH/ciao $USR '$USR' \"$USR\" \"\\$USR\" ciao$USR \\$USR");
+	// lex = lexer("ls $PWD/$PATH/ciao $USER '$USER' \"$USER\" \"\\$USER\" ciao$USER \\$USER && ls $PD/$PTH/ciao $USR '$USR' \"$USR\" \"\\$USR\" ciao$USR \\$USR");
 	// lex = lexer("ls ciao/$PD");
+	// lex = lexer("echo \"'$USER'\"");
+	lex = lexer("echo '\"$USER\"'");
 
 	expander(ms, lex);
 	parser = parse(ms, lex);

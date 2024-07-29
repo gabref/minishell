@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 08:55:48 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/25 00:36:07 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/29 20:26:18 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,8 @@ typedef struct s_minishell
 
 /* initializes the minishell struct */
 void				init_minishell(t_minishell *msh, char **env);
+/* resets the minishell struct */
+void				reset_minishell(t_minishell *ms);
 /* frees all the memory allocated for the minishell */
 void				destroy_minishell(t_minishell *msh);
 

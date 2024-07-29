@@ -78,7 +78,7 @@ void				ft_putstr_fd(char *s, int fd);
 /*minilib_2*/
 void				*ft_memcpy_lex(void *dest, void *src, int n);
 void				*ft_memset(void *b, int c, size_t len);
-char				*ft_strdup(const char *src);
+// char				*ft_strdup(const char *src);
 int					strchr_lex(char *str, char c);
 
 /*minilib3*/

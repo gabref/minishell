@@ -19,26 +19,26 @@ void	*ft_memcpy_lex(void *dest, void *src, int n)
 	return (dest);
 }
 
-char	*ft_strdup(const char *src) // modificata
-{
-	char *dest;
-
-	int i;
-
-	i = 0;
-
-	dest = (char *)malloc((sizeof(char)) * (ft_strlen_lex((char *)src) + 1));
-		// modificato
-	if (dest == NULL)
-		return (0);
-	while (src[i])
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
+// char	*ft_strdup(const char *src) // modificata
+// {
+// 	char *dest;
+//
+// 	int i;
+//
+// 	i = 0;
+//
+// 	dest = (char *)malloc((sizeof(char)) * (ft_strlen_lex((char *)src) + 1));
+// 		// modificato
+// 	if (dest == NULL)
+// 		return (0);
+// 	while (src[i])
+// 	{
+// 		dest[i] = src[i];
+// 		i++;
+// 	}
+// 	dest[i] = '\0';
+// 	return (dest);
+// }
 
 void	*ft_memset(void *b, int c, size_t len) // modificata
 {
