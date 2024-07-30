@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 18:25:57 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/30 03:26:43 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/30 03:32:51 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -460,6 +460,13 @@ t_ebt	*parse_command(t_minishell *ms, t_list **tokens)
 			{
 				token = eat(tokens);
 				continue ;
+			}
+			else if (peek(*tokens)->type == CMD_SUB)
+			{
+				ms->last_exit_status = 1;
+				ft_printf(RED "Error: command substitution not available\n" RST);
+				free_command(command);
+				return (NULL);
 			}
 			else
 			{
