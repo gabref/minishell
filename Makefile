@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/07/30 03:50:56 by galves-f         ###   ########.fr        #
+#    Updated: 2024/07/30 16:15:25 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -197,7 +197,7 @@ install_libs: $(LIBS_DIR)
 	@$(MAKE) $(PRINTF_DIR)
 
 valgrind: all
-	@valgrind --leak-check=full --show-leak-kinds=all -s --track-origins=yes --suppressions=.ignore_readline_leaks.supp ./$(NAME)
+	@valgrind --leak-check=full --show-leak-kinds=all -s --track-origins=yes --suppressions=.ignore_readline_leaks.supp --child-silent-after-fork=yes ./$(NAME)
 
 $(LIBS_DIR):
 	@mkdir -p $(LIBS_DIR)

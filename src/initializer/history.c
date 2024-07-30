@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 16:27:01 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/29 18:54:15 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/30 14:13:30 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	destroy_history(t_minishell *ms)
 {
 	if (ms->history.inputs != NULL)
 		ft_lstclear(&ms->history.inputs, free);
+	ms->history.inputs = NULL;
 }
 
 void	print_history(t_minishell *ms)

@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:33:51 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/29 21:17:03 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/30 13:48:09 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,6 @@ void	print_welcome(void);
 void	*safe_malloc(size_t bytes);
 int		get_global_signal(void);
 void	set_global_signal(int signum);
+void	add_string_front(char ***array, char *str);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ldi-fior <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 16:04:19 by cmaestri          #+#    #+#             */
-/*   Updated: 2024/07/29 21:51:59 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/30 14:05:11 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ char	*get_input(t_minishell *ms)
 	if (ms->ebt)
 		free_ebt(ms->ebt);
 	ms->ebt = NULL;
-	ms->last_exit_status = 0;
 	input = readline("$> ");
 	if (!input)
 	{
