@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 12:47:43 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/26 07:41:28 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/30 02:39:21 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,32 +73,35 @@ void	substitute_envs(t_minishell *ms, char **value)
 
 t_lexer	*expander(t_minishell *ms, t_lexer *lex)
 {
-	t_token	*token;
+	t_list	*node;
 
-	token = lex->tokens;
-	while (token)
+	node = lex->tokens;
+	while (node)
 	{
-		if (token->type == EXIT_STATUS)
+		if (((t_token *)node->content)->type == EXIT_STATUS)
 		{
-			free(token->value);
-			token->type = WORD;
-			token->value = ft_itoa(ms->last_exit_status);
+			free(((t_token *)node->content)->value);
+			((t_token *)node->content)->type = WORD;
+			((t_token *)node->content)->value = ft_itoa(ms->last_exit_status);
 		}
-		if (token->type != WORD && token->type != DOLLAR)
+		if (((t_token *)node->content)->type != WORD
+			&& ((t_token *)node->content)->type != DOLLAR)
 		{
-			token = token->next;
+			node = node->next;
 			continue ;
 		}
-		if (token->value && token->value[0] == '\'')
+		if (((t_token *)node->content)->value
+			&& ((t_token *)node->content)->value[0] == '\'')
 		{
-			token = token->next;
-			if (token && token->value && token->value[0] == '$')
-				token = token->next;
+			node = node->next;
+			if (node && ((t_token *)node->content)->value
+				&& ((t_token *)node->content)->value[0] == '$')
+				node = node->next;
 			continue ;
 		}
-		if (ft_strchr(token->value, '$'))
-			substitute_envs(ms, &token->value);
-		token = token->next;
+		if (ft_strchr(((t_token *)node->content)->value, '$'))
+			substitute_envs(ms, &((t_token *)node->content)->value);
+		node = node->next;
 	}
 	return (lex);
 }

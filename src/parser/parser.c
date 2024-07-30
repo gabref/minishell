@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 18:25:57 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/30 00:43:49 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/30 03:26:43 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,11 @@ int	not_eof(t_token *token)
 
 t_token	*peek(t_list *tokens)
 {
-	t_token *token = (t_token *) tokens->content;
+	t_token	*token;
+
+	if (tokens == NULL)
+		return (NULL);
+	token = (t_token *)tokens->content;
 	return (token);
 }
 
@@ -36,6 +40,8 @@ t_token	*eat(t_list **tokens)
 {
 	t_token	*token;
 
+	if (*tokens == NULL)
+		return (NULL);
 	token = (t_token *)(*tokens)->content;
 	if (token == NULL)
 		return (NULL);
@@ -51,7 +57,7 @@ void	*expect(t_minishell *ms, t_list **tokens, t_token_type type,
 	token = eat(tokens);
 	if (!token)
 	{
-		ft_printf(RED "Error: %s\n", err_message);
+		ft_printf(RED "Error: %s\n" RST, err_message);
 		ms->last_exit_status = 1;
 		return (NULL);
 	}
@@ -313,8 +319,7 @@ t_ebt	*parse_command(t_minishell *ms, t_list **tokens)
 	if (token == NULL || is_close_parenthesis(token))
 	{
 		ms->last_exit_status = 1;
-		ft_printf(RED "\nparse error in index: %d - %s\n" RST,
-			token->input_start_idx, token->value);
+		ft_printf(RED "\nparse error\n" RST);
 		return (NULL);
 	}
 	if (token->type != WORD && !is_open_parenthesis(token)
@@ -474,7 +479,8 @@ t_ebt	*parse_command(t_minishell *ms, t_list **tokens)
 			ebt = create_ebt();
 			ebt->type = EBT_OP_SUBSHELL;
 			ebt->left = parse_expr(ms, tokens);
-			if (ebt->left == NULL || !tokens || !*tokens || !peek(*tokens)->value)
+			if (ebt->left == NULL || !tokens || !*tokens
+				|| !peek(*tokens)->value)
 				if (expect(ms, tokens, token->type + 1,
 						"syntax error near unexpected ')'\n") == NULL)
 				{
@@ -493,7 +499,8 @@ t_ebt	*parse_command(t_minishell *ms, t_list **tokens)
 			ebt = create_ebt();
 			ebt->type = EBT_OP_SUBSHELL;
 			ebt->left = parse_expr(ms, tokens);
-			if (ebt->left == NULL || !tokens || !*tokens || !peek(*tokens)->value)
+			if (ebt->left == NULL || !tokens || !*tokens
+				|| !peek(*tokens)->value)
 				if (expect(ms, tokens, token->type + 1,
 						"syntax error near unexpected '}'\n") == NULL)
 				{
@@ -512,7 +519,8 @@ t_ebt	*parse_command(t_minishell *ms, t_list **tokens)
 			ebt = create_ebt();
 			ebt->type = EBT_OP_SUBSHELL;
 			ebt->left = parse_expr(ms, tokens);
-			if (ebt->left == NULL || !tokens || !*tokens || !peek(*tokens)->value)
+			if (ebt->left == NULL || !tokens || !*tokens
+				|| !peek(*tokens)->value)
 				if (expect(ms, tokens, token->type + 1,
 						"syntax error near unexpected ']'\n") == NULL)
 				{
@@ -631,7 +639,7 @@ t_ebt	*parse_binary_expr_semicolon(t_minishell *ms, t_list **tokens)
 		return (NULL);
 	while (is_binary_token_semicolon(peek(*tokens)))
 	{
-		t_token *operator= eat(tokens);
+		t_token *operator = eat(tokens);
 		right = parse_binary_expr(ms, tokens);
 		if (right == NULL)
 		{

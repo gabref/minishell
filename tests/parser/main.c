@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 14:36:04 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/30 02:16:52 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/30 03:24:55 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,32 +22,32 @@ void	ms_print_lexer(t_lexer *lex);
 void	lexer_tests(t_minishell *ms)
 {
 	t_lexer	*lex;
-	(void)ms;
-	// t_ebt 	*parser;
+	t_ebt 	*parser;
 
 	// lex = lexer("netstat -an | grep 'ESTABLISHED' > /tmp/established_connections.txt && echo \"Connections listed successfully\" > /var/log/netstat.log || echo \"Failed to list connections\" > /var/log/netstat_error.log");
-	// lex = lexer("(date -u) | sed -e 's/ /     /g'");
-	// lex = lexer("(cd ciao && ls || echo \"cd didn work\")");
-	// lex = lexer("(({ ls }))");
 	// lex = lexer("((()))");
-	// lex = lexer(";;");
 	// lex = lexer("echo ciao << bella > ciao >> myfile && cat < myfile; ls >> myfile > ciao < myfile");
 	// lex = lexer("<< bella > myfile");
 	// lex = lexer("> cool_file");
-	// lex = lexer(">");
 	// lex = lexer("mkdir -p src ciao bella oi && ls -l src && echo \"ciao\" || echo \"bella\" | echo \"oi\" && echo \"\"");
 	// lex = lexer("ls ciao/$PD");
 	// lex = lexer("echo \"'$USER'\"");
 	// lex = lexer("echo '\"$USER\"'");
+	// lex = lexer("ls $PWD/$PATH/ciao $? $USER '$USER' \"$USER\" \"\\$USER\" ciao$USER \\$USER && ls $PD/$PTH/ciao $USR '$USR' \"$USR\" \"\\$USR\" ciao$USR \\$USR");
+	// lex = lexer("(date -u) | sed -e 's/ /     /g'");
+	// lex = lexer("(cd ciao && ls || echo \"cd didn work\")");
+	// lex = lexer("(({ ls }))");
+	// lex = lexer(">");
+	// lex = lexer(";;");
 	lex = lexer("cd $(pwd)");
-	// lex = lexer("ls $PWD/$PATH/ciao $USER '$USER' \"$USER\" \"\\$USER\" ciao$USER \\$USER && ls $PD/$PTH/ciao $USR '$USR' \"$USR\" \"\\$USR\" ciao$USR \\$USR");
 
+	// ms_print_lexer(lex);
+	expander(ms, lex);
 	ms_print_lexer(lex);
-	// expander(ms, lex);
-	// parser = parse(ms, lex);
+	parser = parse(ms, lex);
 	free_lexer(lex);
-	// ms->ebt = parser;
-	// print_ebt(ms->ebt, 0);
+	ms->ebt = parser;
+	print_ebt(ms->ebt, 0);
 }
 
 void test_print_token(void *ptr)

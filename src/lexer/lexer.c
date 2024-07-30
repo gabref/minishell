@@ -86,9 +86,9 @@ bool	lexer_create_parenthesis(t_lexer *lex, char *input)
 	char			*value;
 
 	if (input[lex->size] == '(')
-		type = O_PARENTHESES;
+		type = O_BRACKETS;
 	else if (input[lex->size] == ')')
-		type = C_PARENTHESES;
+		type = C_BRACKETS;
 	else if (input[lex->size] == '{')
 		type = O_CURLY;
 	else if (input[lex->size] == '}')
@@ -113,10 +113,15 @@ bool	is_quote(char c)
 	return (c == '\'' || c == '"');
 }
 
+bool is_single_alone_operator(char c)
+{
+	return (c == ';' || c == '\n' || c == '\\');
+}
+
 bool	is_operator(char c)
 {
-	return (c == '|' || c == '&' || c == ';' || c == '<' || c == '>' || c == '!'
-		|| c == '+' || c == '-' || c == '\\' || c == '\n');
+	return (c == '|' || c == '&' || c == '<' || c == '>' || c == '!'
+		|| c == '+' || c == '-');
 }
 
 bool	is_single_operator(char *input, int idx)
@@ -148,8 +153,6 @@ bool	lexer_create_operator(t_lexer *lex, char *input)
 		type = PIPE;
 	else if (input[lex->size] == '&')
 		type = AND;
-	else if (input[lex->size] == ';')
-		type = SEMICOLON;
 	else if (input[lex->size] == '<')
 		type = O_ANGLE_BRACKET;
 	else if (input[lex->size] == '>')
@@ -160,6 +163,20 @@ bool	lexer_create_operator(t_lexer *lex, char *input)
 		type = OPERATORS;
 	else if (input[lex->size] == '-')
 		type = OPERATORS;
+	value = ft_char_to_string(input[lex->size]);
+	token = create_token(value, type, lex->size, lex->size + 1);
+	lexer_push_advance(lex, token, input);
+	return (true);
+}
+
+bool lexer_create_single_alone_operator(t_lexer *lex, char *input)
+{
+	t_token_type	type;
+	t_token			*token;
+	char			*value;
+
+	if (input[lex->size] == ';')
+		type = SEMICOLON;
 	else if (input[lex->size] == '\n')
 		type = N_LINE;
 	else if (input[lex->size] == '\\')
@@ -278,6 +295,8 @@ bool	lexer_get_tokens(t_lexer *lex, char *input)
 			break ;
 		if (is_parenthesis(input[lex->size]))
 			success = lexer_create_parenthesis(lex, input);
+		else if (is_single_alone_operator(input[lex->size]))
+			success = lexer_create_single_alone_operator(lex, input);
 		else if (is_single_operator(input, lex->size))
 			success = lexer_create_operator(lex, input);
 		else if (is_double_operator(input, lex->size))
