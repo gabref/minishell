@@ -223,7 +223,6 @@ bool	lexer_create_word(t_lexer *lex, char *input)
 		len++;
 	type = WORD;
 	value = ft_substr(input, start, len);
-	ft_printf("here: %d, %s\n", len, value);
 	token = create_token(value, type, lex->size, lex->size + len);
 	lexer_push_advance(lex, token, input);
 	return (true);
