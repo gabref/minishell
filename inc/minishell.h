@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 08:55:48 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/29 21:18:42 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/31 13:30:50 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+
+# define SUCCESS 1
+# define FAILURE 0
 
 /*
  *	t_history
@@ -114,6 +117,9 @@ typedef struct s_ebt
 typedef struct s_minishell
 {
 	int				last_exit_status;
+	int				saved_stdin;
+	int				saved_stdout;
+	int				saved_stderr;
 	pid_t			pid;
 	pid_t			*pids;
 	t_ebt			*ebt;

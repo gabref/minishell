@@ -6,12 +6,13 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 18:43:55 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/25 14:09:44 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/31 13:57:23 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 #include "../../inc/utils.h"
+#include "../../inc/colors.h"
 
 static void	append_env_node(t_list **env_list, char *key, char *value)
 {
@@ -81,6 +82,11 @@ void	print_envs(t_list *env)
 {
 	t_env	*env_s;
 
+	if (env == NULL)
+	{
+		ft_printf(YELLOW_BOLD "env is empty\n" RST);
+		return ;
+	}
 	while (env)
 	{
 		env_s = (t_env *)env->content;

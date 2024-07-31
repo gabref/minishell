@@ -67,6 +67,65 @@ char	**get_envs(t_list *envs)
 	return (env);
 }
 
+void save_redirection_state(t_minishell *ms)
+{
+	ms->saved_stdin = dup(STDIN_FILENO);
+	ms->saved_stdout = dup(STDOUT_FILENO);
+	ms->saved_stderr = dup(STDERR_FILENO);
+}
+
+void restore_redirection_state(t_minishell *ms)
+{
+	dup2(ms->saved_stdin, STDIN_FILENO);
+	dup2(ms->saved_stdout, STDOUT_FILENO);
+	dup2(ms->saved_stderr, STDERR_FILENO);
+	close(ms->saved_stdin);
+	close(ms->saved_stdout);
+	close(ms->saved_stderr);
+}
+
+int handle_redirections(t_command *command)
+{
+	t_list *redir_node;
+	t_redir *redir;
+
+	redir_node = command->redirections;
+	while (redir_node)
+	{
+		redir = (t_redir *) redir_node->content;
+		if (redir->to == RT_WRITE || redir->to == RT_APPEND)
+		{
+			int flags = O_WRONLY | O_CREAT;
+			if (redir->to == RT_APPEND)
+				flags |= O_APPEND;
+			int fd = open(redir->filename, flags, 0644);
+			if (fd < 0)
+			{
+				ft_putstr_fd("Error opening file\n", STDERR_FILENO);
+				return (FAILURE);
+			}
+			if (redir->from == RT_STDOUT)
+				dup2(fd, STDOUT_FILENO);
+			else if (redir->from == RT_STDERR)
+				dup2(fd, STDERR_FILENO);
+			close(fd);
+		}
+		else if (redir->to == RT_READ)
+		{
+			int fd = open(redir->filename, O_RDONLY);
+			if (fd < 0)
+			{
+				ft_putstr_fd("Error opening file\n", STDERR_FILENO);
+				return (FAILURE);
+			}
+			dup2(fd, STDIN_FILENO);
+			close(fd);
+		}
+		redir_node = redir_node->next;
+	}
+	return (SUCCESS);
+}
+
 void	exec_command(t_minishell *ms, t_command *command, t_list *envs)
 {
 	char	*cmd_path;
@@ -114,12 +173,10 @@ void	exec_parent(t_minishell *ms, pid_t child_pid, char *command)
 		{
 			if (WEXITSTATUS(status) == 127)
 				printf("command not found: %s\n", command);
-			else
-				printf("%s - %d\n", strerror(WEXITSTATUS(status)),
-					ms->last_exit_status);
 			ms->last_exit_status = WEXITSTATUS(status);
 		}
 	}
+	// print_ebt(ms->ebt, 0);
 }
 
 int	fork_and_exec(t_minishell *ms, t_command *command)
@@ -127,20 +184,20 @@ int	fork_and_exec(t_minishell *ms, t_command *command)
 	pid_t	pid;
 
 	if (!command || !command->command)
-		return (-1);
+		return (FAILURE);
 	pid = fork();
 	if (pid < 0)
 	{
 		ft_putstr_fd("Error forking process\n", STDERR_FILENO);
-		return (-1);
+		return (FAILURE);
 	}
 	if (pid == 0)
 		exec_command(ms, command, ms->env);
 	else
 		exec_parent(ms, pid, command->command);
 	if (ms->last_exit_status != 0)
-		return (-1);
-	return (0);
+		return (FAILURE);
+	return (SUCCESS);
 }
 
 int	exec_pipe(t_minishell *ms, t_ebt *left, t_ebt *right, t_list *envs)
@@ -155,13 +212,13 @@ int	exec_pipe(t_minishell *ms, t_ebt *left, t_ebt *right, t_list *envs)
 	if (pipe(pipe_fd) < 0)
 	{
 		ft_putstr_fd("Error creating pipe\n", STDERR_FILENO);
-		return (-1);
+		return (FAILURE);
 	}
 	pid1 = fork();
 	if (pid1 < 0)
 	{
 		ft_putstr_fd("Error forking process\n", STDERR_FILENO);
-		return (-1);
+		return (FAILURE);
 	}
 	if (pid1 == 0)
 	{
@@ -176,7 +233,7 @@ int	exec_pipe(t_minishell *ms, t_ebt *left, t_ebt *right, t_list *envs)
 	if (pid2 < 0)
 	{
 		ft_putstr_fd("Error forking process\n", STDERR_FILENO);
-		return (-1);
+		return (FAILURE);
 	}
 	if (pid2 == 0)
 	{
@@ -192,9 +249,9 @@ int	exec_pipe(t_minishell *ms, t_ebt *left, t_ebt *right, t_list *envs)
 	if (WIFEXITED(status1) && WIFEXITED(status2))
 	{
 		if (WEXITSTATUS(status1) != 0 || WEXITSTATUS(status2) != 0)
-			return (-1);
+			return (FAILURE);
 	}
-	return (0);
+	return (SUCCESS);
 }
 
 int	exec_ebt(t_minishell *ms, t_ebt *ebt)
@@ -203,9 +260,9 @@ int	exec_ebt(t_minishell *ms, t_ebt *ebt)
 	int	r_status;
 
 	if (!ebt)
-		return (-1);
-	l_status = 0;
-	r_status = 0;
+		return (FAILURE);
+	l_status = SUCCESS;
+	r_status = SUCCESS;
 	if (ebt->type == EBT_OP_COMMAND)
 		l_status = fork_and_exec(ms, ebt->command);
 	else if (ebt->type == EBT_OP_PIPE)
@@ -213,13 +270,13 @@ int	exec_ebt(t_minishell *ms, t_ebt *ebt)
 	else if (ebt->type == EBT_OP_AND)
 	{
 		l_status = exec_ebt(ms, ebt->left);
-		if (l_status == 0)
+		if (l_status == SUCCESS)
 			r_status = exec_ebt(ms, ebt->right);
 	}
 	else if (ebt->type == EBT_OP_OR)
 	{
 		l_status = exec_ebt(ms, ebt->left);
-		if (l_status != 0)
+		if (l_status == FAILURE)
 			r_status = exec_ebt(ms, ebt->right);
 	}
 	else if (ebt->type == EBT_OP_SEMICOLON)
@@ -232,9 +289,13 @@ int	exec_ebt(t_minishell *ms, t_ebt *ebt)
 	else
 	{
 		ft_putstr_fd("Unsupported operation\n", STDERR_FILENO);
-		return (-1);
+		return (FAILURE);
 	}
-	if (ebt->type == EBT_OP_AND || ebt->type == EBT_OP_OR)
+	if (ebt->type == EBT_OP_AND)
+		return (l_status && r_status);
+	else if (ebt->type == EBT_OP_OR)
+		return (l_status || r_status);
+	else if (ebt->type == EBT_OP_PIPE)
 		return (r_status);
 	return (l_status);
 }
