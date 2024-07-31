@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 16:27:01 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/30 14:13:30 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/31 15:55:20 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	ms_append_history(t_minishell *ms, char *line)
 {
 	t_list	*node;
-	t_list	*new_node;
 
 	node = ms->history.inputs;
 	while (node)
@@ -24,10 +23,10 @@ void	ms_append_history(t_minishell *ms, char *line)
 			return ;
 		node = node->next;
 	}
-	new_node = ft_lstnew(ft_strdup(line));
-	if (!new_node)
-		return ;
-	ft_lstadd_front(&ms->history.inputs, new_node);
+	if (ms->history.inputs == NULL)
+		ms->history.inputs = ft_lstnew(ft_strdup(line));
+	else
+		ft_lstadd_front(&ms->history.inputs, ft_lstnew(ft_strdup(line)));
 	ms->history.cur_idx++;
 }
 
