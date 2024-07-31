@@ -309,7 +309,6 @@ void	executor(t_minishell *ms)
 	t_ebt	*ebt;
 
 	ebt = ms->ebt;
-	print_ebt(ms->ebt, 0);
 	exec_ebt(ms, ebt);
 	return ;
 }

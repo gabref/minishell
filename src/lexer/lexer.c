@@ -115,12 +115,12 @@ bool	is_quote(char c)
 
 bool is_single_alone_operator(char c)
 {
-	return (c == ';' || c == '\n' || c == '\\');
+	return (c == '|' || c == ';' || c == '\n' || c == '\\');
 }
 
 bool	is_operator(char c)
 {
-	return (c == '|' || c == '<' || c == '>');
+	return (c == '<' || c == '>');
 }
 
 bool	is_single_operator(char *input, int idx)
@@ -148,9 +148,7 @@ bool	lexer_create_operator(t_lexer *lex, char *input)
 	t_token			*token;
 	char			*value;
 
-	if (input[lex->size] == '|')
-		type = PIPE;
-	else if (input[lex->size] == '&')
+	if (input[lex->size] == '&')
 		type = AND;
 	else if (input[lex->size] == '<')
 		type = O_ANGLE_BRACKET;
@@ -174,7 +172,9 @@ bool lexer_create_single_alone_operator(t_lexer *lex, char *input)
 	t_token			*token;
 	char			*value;
 
-	if (input[lex->size] == ';')
+	if (input[lex->size] == '|')
+		type = PIPE;
+	else if (input[lex->size] == ';')
 		type = SEMICOLON;
 	else if (input[lex->size] == '\n')
 		type = N_LINE;
@@ -217,7 +217,7 @@ bool	lexer_create_word(t_lexer *lex, char *input)
 	len = 1;
 	start = lex->size;
 	while (input[start + len] && ft_isprint(input[start + len])
-		&& !is_operator(input[start + len]) && !is_parenthesis(input[start
+		&& !is_operator(input[start + len]) && !is_single_alone_operator(input[start + len]) && !is_parenthesis(input[start
 			+ len]) && !ft_isspace(input[start + len]))
 		len++;
 	type = WORD;
