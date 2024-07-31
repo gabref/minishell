@@ -1,11 +1,13 @@
-#include "../../inc/minishell.h"
 #include "../../inc/initializers.h"
-#include "../../inc/utils.h"
+#include "../../inc/minishell.h"
 #include "../../inc/parser.h"
+#include "../../inc/utils.h"
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+
+int		exec_ebt(t_minishell *ms, t_ebt *ebt);
 
 char	*get_path_for_executable(t_minishell *ms, char *command)
 {
@@ -113,7 +115,8 @@ void	exec_parent(t_minishell *ms, pid_t child_pid, char *command)
 			if (WEXITSTATUS(status) == 127)
 				printf("command not found: %s\n", command);
 			else
-				printf("%s - %d\n", strerror(WEXITSTATUS(status)), ms->last_exit_status);
+				printf("%s - %d\n", strerror(WEXITSTATUS(status)),
+					ms->last_exit_status);
 			ms->last_exit_status = WEXITSTATUS(status);
 		}
 	}
@@ -142,10 +145,55 @@ int	fork_and_exec(t_minishell *ms, t_command *command)
 
 int	exec_pipe(t_minishell *ms, t_ebt *left, t_ebt *right, t_list *envs)
 {
-	(void)ms;
-	(void)left;
-	(void)right;
+	int		pipe_fd[2];
+	pid_t	pid1;
+	pid_t	pid2;
+	int		status1;
+	int		status2;
+
 	(void)envs;
+	if (pipe(pipe_fd) < 0)
+	{
+		ft_putstr_fd("Error creating pipe\n", STDERR_FILENO);
+		return (-1);
+	}
+	pid1 = fork();
+	if (pid1 < 0)
+	{
+		ft_putstr_fd("Error forking process\n", STDERR_FILENO);
+		return (-1);
+	}
+	if (pid1 == 0)
+	{
+		close(pipe_fd[0]);
+		dup2(pipe_fd[1], STDOUT_FILENO);
+		close(pipe_fd[1]);
+		exec_ebt(ms, left);
+		exit(0);
+	}
+	waitpid(pid1, &status1, 0);
+	pid2 = fork();
+	if (pid2 < 0)
+	{
+		ft_putstr_fd("Error forking process\n", STDERR_FILENO);
+		return (-1);
+	}
+	if (pid2 == 0)
+	{
+		close(pipe_fd[1]);
+		dup2(pipe_fd[0], STDIN_FILENO);
+		close(pipe_fd[0]);
+		exec_ebt(ms, right);
+		exit(0);
+	}
+	close(pipe_fd[0]);
+	close(pipe_fd[1]);
+	waitpid(pid2, &status2, 0);
+	if (WIFEXITED(status1) && WIFEXITED(status2))
+	{
+		if (WEXITSTATUS(status1) != 0 || WEXITSTATUS(status2) != 0)
+			return (-1);
+	}
 	return (0);
 }
 
