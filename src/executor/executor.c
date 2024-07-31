@@ -67,14 +67,14 @@ char	**get_envs(t_list *envs)
 	return (env);
 }
 
-void save_redirection_state(t_minishell *ms)
+void	save_redirection_state(t_minishell *ms)
 {
 	ms->saved_stdin = dup(STDIN_FILENO);
 	ms->saved_stdout = dup(STDOUT_FILENO);
 	ms->saved_stderr = dup(STDERR_FILENO);
 }
 
-void restore_redirection_state(t_minishell *ms)
+void	restore_redirection_state(t_minishell *ms)
 {
 	dup2(ms->saved_stdin, STDIN_FILENO);
 	dup2(ms->saved_stdout, STDOUT_FILENO);
@@ -84,21 +84,23 @@ void restore_redirection_state(t_minishell *ms)
 	close(ms->saved_stderr);
 }
 
-int handle_redirections(t_command *command)
+int	handle_redirections(t_command *command)
 {
-	t_list *redir_node;
-	t_redir *redir;
+	t_list	*redir_node;
+	t_redir	*redir;
+	int		flags;
+	int		fd;
 
 	redir_node = command->redirections;
 	while (redir_node)
 	{
-		redir = (t_redir *) redir_node->content;
+		redir = (t_redir *)redir_node->content;
 		if (redir->to == RT_WRITE || redir->to == RT_APPEND)
 		{
-			int flags = O_WRONLY | O_CREAT;
+			flags = O_WRONLY | O_CREAT;
 			if (redir->to == RT_APPEND)
 				flags |= O_APPEND;
-			int fd = open(redir->filename, flags, 0644);
+			fd = open(redir->filename, flags, 0644);
 			if (fd < 0)
 			{
 				ft_putstr_fd("Error opening file\n", STDERR_FILENO);
@@ -112,7 +114,7 @@ int handle_redirections(t_command *command)
 		}
 		else if (redir->to == RT_READ)
 		{
-			int fd = open(redir->filename, O_RDONLY);
+			fd = open(redir->filename, O_RDONLY);
 			if (fd < 0)
 			{
 				ft_putstr_fd("Error opening file\n", STDERR_FILENO);
@@ -133,6 +135,7 @@ void	exec_command(t_minishell *ms, t_command *command, t_list *envs)
 
 	if (!command || !command->command)
 		exit(-1);
+	handle_redirections(command);
 	cmd_path = get_path_for_executable(ms, command->command);
 	if (!cmd_path)
 	{
@@ -176,7 +179,6 @@ void	exec_parent(t_minishell *ms, pid_t child_pid, char *command)
 			ms->last_exit_status = WEXITSTATUS(status);
 		}
 	}
-	// print_ebt(ms->ebt, 0);
 }
 
 int	fork_and_exec(t_minishell *ms, t_command *command)
@@ -185,6 +187,7 @@ int	fork_and_exec(t_minishell *ms, t_command *command)
 
 	if (!command || !command->command)
 		return (FAILURE);
+	save_redirection_state(ms);
 	pid = fork();
 	if (pid < 0)
 	{
@@ -195,6 +198,7 @@ int	fork_and_exec(t_minishell *ms, t_command *command)
 		exec_command(ms, command, ms->env);
 	else
 		exec_parent(ms, pid, command->command);
+	restore_redirection_state(ms);
 	if (ms->last_exit_status != 0)
 		return (FAILURE);
 	return (SUCCESS);
@@ -305,6 +309,7 @@ void	executor(t_minishell *ms)
 	t_ebt	*ebt;
 
 	ebt = ms->ebt;
+	print_ebt(ms->ebt, 0);
 	exec_ebt(ms, ebt);
 	return ;
 }

@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 18:25:57 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/31 19:23:43 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/07/31 19:51:49 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -392,8 +392,8 @@ t_ebt	*parse_command(t_minishell *ms, t_list **tokens)
 				redir->to = RT_STDOUT;
 				if (token->type == O_ANGLE_BRACKET)
 				{
-					redir->from = RT_READ;
-					redir->to = RT_STDIN;
+					redir->from = RT_STDIN;
+					redir->to = RT_READ;
 					token = eat(tokens);
 					if (token == NULL || token->value == NULL)
 					{
