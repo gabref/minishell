@@ -120,8 +120,7 @@ bool is_single_alone_operator(char c)
 
 bool	is_operator(char c)
 {
-	return (c == '|' || c == '&' || c == '<' || c == '>' || c == '!'
-		|| c == '+' || c == '-');
+	return (c == '|' || c == '<' || c == '>');
 }
 
 bool	is_single_operator(char *input, int idx)
