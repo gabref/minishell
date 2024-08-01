@@ -54,8 +54,13 @@ void	builtin_cd(t_minishell *ms, char **args)
 	struct stat	path_stat;
 	char		*old_path;
 
-	(void)ms;
 	new_path = NULL;
+	if (args && args[0] && args[1])
+	{
+		ft_putstr_fd(" too many arguments\n", STDERR_FILENO);
+		ms->last_exit_status = 1;
+		return ;
+	}
 	if (args != NULL && args[0] != NULL)
 		new_path = args[0];
 	if (new_path == NULL)
@@ -89,13 +94,15 @@ void	builtin_cd(t_minishell *ms, char **args)
 		new_path = ft_strdup(new_path);
 	if (stat(new_path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode) == 0)
 	{
-		ft_putstr_fd("directory does not exists\n", 2);
+		ft_putstr_fd(" No such file or directory\n", 2);
+		ms->last_exit_status = 1;
 		free(new_path);
 		return ;
 	}
 	if (chdir(new_path) != 0)
 	{
-		ft_putstr_fd("directory does not exists\n", 2);
+		ft_putstr_fd(" No such file or directory\n", 2);
+		ms->last_exit_status = 1;
 		free(new_path);
 		return ;
 	}
