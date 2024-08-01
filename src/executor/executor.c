@@ -287,6 +287,15 @@ void	execute_builtin(t_minishell *ms, t_command *command)
 	ft_putstr_fd("Unknown builtin command\n", STDOUT_FILENO);
 }
 
+int is_directory(char *command)
+{
+	struct stat	path_stat;
+
+	if (stat(command, &path_stat) == 0 && S_ISDIR(path_stat.st_mode) == 1)
+		return (1);
+	return (0);
+}
+
 char	*get_path_for_executable(t_minishell *ms, char *command)
 {
 	char	*path;
@@ -297,7 +306,7 @@ char	*get_path_for_executable(t_minishell *ms, char *command)
 
 	if (ft_strchr(command, '/'))
 	{
-		if (access(command, F_OK | X_OK) == 0)
+		if (!is_directory(command) && access(command, F_OK | X_OK) == 0)
 			return (ft_strdup(command));
 		return (NULL);
 	}
