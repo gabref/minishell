@@ -6,7 +6,7 @@
 /*   By: ldi-fior <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 16:04:19 by cmaestri          #+#    #+#             */
-/*   Updated: 2024/08/01 15:13:51 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/01 16:42:36 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,14 @@ char	*get_input(t_minishell *ms)
 	// prompt = create_prompt(ms);
 	input = readline("$> ");
 	// free(prompt);
-	if (input == NULL || input[0] == EOF || input[0] == '\0')
+	if (input == NULL)
+		return (NULL);
+	if (input[0] == '\0')
+	{
+		free(input);
+		return (ft_strdup(" "));
+	}
+	if (input[0] == EOF)
 	{
 		free(input);
 		return (NULL);
@@ -133,11 +140,30 @@ void	ms_print_lexer(t_lexer *lex)
 	ft_lstiter(lex->tokens, test_print_token);
 }
 
+bool	string_all_spaces(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] != ' ' && str[i] != '\t' && str[i] != '\n' && str[i] != '\r')
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
 bool	handle_input(t_minishell *ms, char *input)
 {
 	t_lexer	*lex;
 	t_ebt	*parser;
 
+	if (string_all_spaces(input))
+	{
+		free(input);
+		return (true);
+	}
 	lex = lexer(input);
 	if (!lex)
 	{

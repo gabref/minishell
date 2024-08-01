@@ -1,9 +1,9 @@
 # Minishell
 
 ## TODOS
-* [ ] double quotes and single quotes escapes
+* [x] double quotes and single quotes escapes
 * [x] only spaces or tabs as input
-* [ ] enter after ctrl-c with text already written "the buffer should be clean, press enter to make sure nothing from previous prompt is executed"
+* [x] enter after ctrl-c with text already written "the buffer should be clean, press enter to make sure nothing from previous prompt is executed"
 * [ ] ctrl-c in the middle of a blocking command like cat
 * [ ] history
 * [ ] heredoc
