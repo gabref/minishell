@@ -1,5 +1,9 @@
 # Minishell
 
+## TODOS
+* [ ] double quotes and single quotes escapes
+* [ ] only spaces or tabs as input
+
 ## Requirements
 
 Requirements to test de project:

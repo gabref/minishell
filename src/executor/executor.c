@@ -271,6 +271,12 @@ char	*get_path_for_executable(t_minishell *ms, char *command)
 	char	**path_dirs;
 	int		i;
 
+	if (ft_strchr(command, '/'))
+	{
+		if (access(command, F_OK | X_OK) == 0)
+			return (ft_strdup(command));
+		return (NULL);
+	}
 	path = NULL;
 	path_env = ms_get_env(ms, "PATH");
 	path_dirs = ft_split(path_env, ':');
