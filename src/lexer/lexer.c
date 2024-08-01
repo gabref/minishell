@@ -265,7 +265,8 @@ bool	lexer_create_dollar(t_lexer *lex, char *input)
 	char			*value;
 	t_token			*token;
 
-	if (ft_strncmp(&input[lex->size], "$?", 2) == 0)
+	if (ft_strncmp(&input[lex->size], "$?", 2) == 0
+		&& ft_isspace(input[lex->size + 2]))
 	{
 		type = EXIT_STATUS;
 		value = ft_substr(input, lex->size, 2);

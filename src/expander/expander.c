@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 12:47:43 by galves-f          #+#    #+#             */
-/*   Updated: 2024/08/01 13:11:48 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/01 13:25:21 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,10 @@ void	substitute_envs(t_minishell *ms, char **value)
 			j = 0;
 			while (ft_isalnum((*value)[i + j + 1]) || (*value)[i + j + 1] == '_'
 				|| (*value)[i + j + 1] == '?')
-				j++;
+			{
+				if ((*value)[i + j++ + 1] == '?')
+					break ;
+			}
 			if (j == 0)
 			{
 				i++;
