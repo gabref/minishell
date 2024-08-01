@@ -429,6 +429,7 @@ void	exec_command(t_minishell *ms, t_command *command, t_list *envs)
 
 	if (!command || !command->command)
 		exit(1);
+	// config_signals();
 	if (handle_redirections(ms, command) == FAILURE)
 	{
 		exit(1);
@@ -455,6 +456,11 @@ void	exec_parent(t_minishell *ms, pid_t child_pid, char *command)
 
 	if (waitpid(child_pid, &status, 0) < 0)
 	{
+		if (get_global_signal() == SIGINT)
+		{
+			ft_printf("\n");
+			return ;
+		}
 		ft_putstr_fd("Error waiting for child process\n", STDERR_FILENO);
 		return ;
 	}
