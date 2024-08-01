@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 12:47:43 by galves-f          #+#    #+#             */
-/*   Updated: 2024/08/01 12:52:32 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/01 13:11:48 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,18 @@ void	substitute_envs(t_minishell *ms, char **value)
 				continue ;
 			}
 			j = 0;
-			while (ft_isalnum((*value)[i + j + 1]))
+			while (ft_isalnum((*value)[i + j + 1]) || (*value)[i + j + 1] == '_'
+				|| (*value)[i + j + 1] == '?')
 				j++;
 			if (j == 0)
 			{
 				i++;
+				continue ;
+			}
+			if (j == 1 && (*value)[i + 1] == '?')
+			{
+				substitute_str(value, i, i + 2, ft_itoa(ms->last_exit_status));
+				i = 0;
 				continue ;
 			}
 			env = ms_get_env(ms, (*value) + i + 1);
@@ -94,7 +101,7 @@ void	handle_around_double_quotes(char **str)
 void	handle_quotes(char **str)
 {
 	int	i;
-	int start;
+	int	start;
 
 	start = 0;
 	if ((*str)[0] == '"')
