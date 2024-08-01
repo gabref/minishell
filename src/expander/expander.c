@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 12:47:43 by galves-f          #+#    #+#             */
-/*   Updated: 2024/08/01 12:26:03 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/01 12:52:32 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,11 @@ void	substitute_envs(t_minishell *ms, char **value)
 			j = 0;
 			while (ft_isalnum((*value)[i + j + 1]))
 				j++;
+			if (j == 0)
+			{
+				i++;
+				continue ;
+			}
 			env = ms_get_env(ms, (*value) + i + 1);
 			if (env == NULL)
 				env = ft_strdup("");
@@ -89,14 +94,25 @@ void	handle_around_double_quotes(char **str)
 void	handle_quotes(char **str)
 {
 	int	i;
+	int start;
 
-	i = 0;
+	start = 0;
+	if ((*str)[0] == '"')
+		start = 1;
+	i = start;
 	while ((*str)[i])
 	{
-		if ((*str)[i] == '\'' || (*str)[i] == '\"')
+		if ((!start && (*str)[i] == '\'') || (*str)[i] == '\"')
 		{
 			substitute_str(str, i, i + 1, "");
-			i = 0;
+			i = start;
+			continue ;
+		}
+		else if ((*str)[i] == '\\' && ((*str)[i + 1] == '\'' || (*str)[i
+				+ 1] == '"'))
+		{
+			substitute_str(str, i, i + 2, "");
+			i = start;
 			continue ;
 		}
 		i++;
@@ -105,16 +121,16 @@ void	handle_quotes(char **str)
 
 const char	*get_escape_chars(void)
 {
-	static const char	escape_chars[] = {'\\', '\'', '\"', '\?', '\a', '\b',
-			'\f', '\n', '\r', '\t', '\v'};
+	static const char	escape_chars[] = {'\\', '\?', '\a', '\b', '\f', '\n',
+			'\r', '\t', '\v'};
 
 	return (escape_chars);
 }
 
 const char	**get_escape_strings(void)
 {
-	static const char	*escape_chars[] = {"\\", "\'", "\"", "?", "a", "b", "f",
-			"n", "r", "t", "v"};
+	static const char	*escape_chars[] = {"\\", "?", "a", "b", "f", "n", "r",
+			"t", "v"};
 
 	return (escape_chars);
 }
@@ -215,12 +231,12 @@ t_lexer	*expander(t_minishell *ms, t_lexer *lex)
 				node = node->next;
 			continue ;
 		}
-		handle_around_double_quotes(&((t_token *)node->content)->value);
+		if (ft_strchr(((t_token *)node->content)->value, '$'))
+			substitute_envs(ms, &((t_token *)node->content)->value);
 		substitute_escape_chars(&((t_token *)node->content)->value);
 		handle_escape_chars(&((t_token *)node->content)->value);
 		handle_quotes(&((t_token *)node->content)->value);
-		if (ft_strchr(((t_token *)node->content)->value, '$'))
-			substitute_envs(ms, &((t_token *)node->content)->value);
+		handle_around_double_quotes(&((t_token *)node->content)->value);
 		node = node->next;
 	}
 	return (lex);
