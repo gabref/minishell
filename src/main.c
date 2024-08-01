@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:46:02 by galves-f          #+#    #+#             */
-/*   Updated: 2024/08/01 02:47:19 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/01 12:10:10 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	main(int ac, char **av, char **envp)
 	}
 	config_signals();
 	init_minishell(&ms, envp);
-	print_welcome();
+	// print_welcome();
 	while (1)
 	{
 		reset_minishell(&ms);

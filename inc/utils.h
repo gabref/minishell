@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:33:51 by galves-f          #+#    #+#             */
-/*   Updated: 2024/08/01 03:20:27 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/01 11:39:08 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@ int		get_global_signal(void);
 void	set_global_signal(int signum);
 void	add_string_front(char ***array, char *str);
 void	substitute_str(char **str, int start, int end, char *sub);
+int		find_string_2d_array(char *str, char **arr);
 
 #endif

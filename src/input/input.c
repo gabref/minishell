@@ -6,7 +6,7 @@
 /*   By: ldi-fior <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 16:04:19 by cmaestri          #+#    #+#             */
-/*   Updated: 2024/08/01 04:03:07 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/01 12:24:21 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,32 @@ char	*get_input(t_minishell *ms)
 	return (input);
 }
 
+void test_print_token(void *ptr)
+{
+	t_token *token;
+
+	token = (t_token *) ptr;
+	if (token->value == NULL)
+	{
+		ft_printf("token is NULL\n");
+		return ;
+	}
+	printf("token value:\t%s,\ttype: %d,\tstart idx: %d,\tcurrent idx: %d\n",
+		token->value, token->type, token->input_start_idx,
+		token->current_idx);
+}
+
+void	ms_print_lexer(t_lexer *lex)
+{
+	if (!lex)
+	{
+		ft_printf("no lexer\n");
+		return ;
+	}
+	ft_printf("size: %d\n", lex->size);
+	ft_lstiter(lex->tokens, test_print_token);
+}
+
 bool	handle_input(t_minishell *ms, char *input)
 {
 	t_lexer	*lex;
@@ -117,6 +143,7 @@ bool	handle_input(t_minishell *ms, char *input)
 		free(input);
 		return (false);
 	}
+	// ms_print_lexer(lex);
 	free(input);
 	expander(ms, lex);
 	parser = parse(ms, lex);

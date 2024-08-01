@@ -113,7 +113,7 @@ bool	is_quote(char c)
 	return (c == '\'' || c == '"');
 }
 
-bool is_single_alone_operator(char c)
+bool	is_single_alone_operator(char c)
 {
 	return (c == '|' || c == ';' || c == '\n' || c == '\\');
 }
@@ -166,7 +166,7 @@ bool	lexer_create_operator(t_lexer *lex, char *input)
 	return (true);
 }
 
-bool lexer_create_single_alone_operator(t_lexer *lex, char *input)
+bool	lexer_create_single_alone_operator(t_lexer *lex, char *input)
 {
 	t_token_type	type;
 	t_token			*token;
@@ -217,8 +217,10 @@ bool	lexer_create_word(t_lexer *lex, char *input)
 	len = 1;
 	start = lex->size;
 	while (input[start + len] && ft_isprint(input[start + len])
-		&& !is_operator(input[start + len]) && !is_single_alone_operator(input[start + len]) && !is_parenthesis(input[start
-			+ len]) && !ft_isspace(input[start + len]))
+		&& !is_operator(input[start + len])
+		&& !is_single_alone_operator(input[start + len])
+		&& !is_parenthesis(input[start + len]) && !ft_isspace(input[start
+			+ len]))
 		len++;
 	type = WORD;
 	value = ft_substr(input, start, len);
@@ -246,7 +248,8 @@ bool	lexer_create_between_quotes(t_lexer *lex, char *input)
 	else if (input[start + i] == '"')
 	{
 		i++;
-		while (input[start + i] && input[start + i] != '"')
+		while (input[start + i] && input[start + i] != '"' && input[start + i
+			- 1] != '\\')
 			i++;
 	}
 	type = WORD;
