@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 12:47:43 by galves-f          #+#    #+#             */
-/*   Updated: 2024/08/01 13:25:21 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/01 16:19:02 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void	handle_around_double_quotes(char **str)
 {
 	if ((*str)[0] == '\"')
 		substitute_str(str, 0, 1, "");
-	if ((*str)[ft_strlen(*str) - 1] == '\"' && (*str)[ft_strlen(*str)
+	if (ft_strlen(*str) > 2 && (*str)[ft_strlen(*str) - 1] == '\"' && (*str)[ft_strlen(*str)
 		- 2] != '\\')
 		substitute_str(str, ft_strlen(*str) - 1, ft_strlen(*str), "");
 }
