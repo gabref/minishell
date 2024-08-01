@@ -115,12 +115,12 @@ bool	is_quote(char c)
 
 bool	is_single_alone_operator(char c)
 {
-	return (c == '|' || c == ';' || c == '\n' || c == '\\');
+	return (c == '<' || c == '|' || c == ';' || c == '\n' || c == '\\');
 }
 
 bool	is_operator(char c)
 {
-	return (c == '<' || c == '>');
+	return (c == '>');
 }
 
 bool	is_single_operator(char *input, int idx)
@@ -150,8 +150,6 @@ bool	lexer_create_operator(t_lexer *lex, char *input)
 
 	if (input[lex->size] == '&')
 		type = AND;
-	else if (input[lex->size] == '<')
-		type = O_ANGLE_BRACKET;
 	else if (input[lex->size] == '>')
 		type = C_ANGLE_BRACKET;
 	else if (input[lex->size] == '!')
@@ -174,6 +172,8 @@ bool	lexer_create_single_alone_operator(t_lexer *lex, char *input)
 
 	if (input[lex->size] == '|')
 		type = PIPE;
+	else if (input[lex->size] == '<')
+		type = O_ANGLE_BRACKET;
 	else if (input[lex->size] == ';')
 		type = SEMICOLON;
 	else if (input[lex->size] == '\n')
@@ -248,9 +248,18 @@ bool	lexer_create_between_quotes(t_lexer *lex, char *input)
 	else if (input[start + i] == '"')
 	{
 		i++;
-		while (input[start + i] && input[start + i] != '"' && input[start + i
-			- 1] != '\\')
-			i++;
+		while (1)
+		{
+			while (input[start + i] && input[start + i] != '"' && input[start + i
+				- 1] != '\\')
+				i++;
+			if (input[start + i + 1] == '"')
+			{
+				i += 2;
+				continue ;
+			}
+			break ;
+		}
 	}
 	type = WORD;
 	value = ft_substr(input, start, i + 1);

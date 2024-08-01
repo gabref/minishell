@@ -368,7 +368,7 @@ void	restore_redirection_state(t_minishell *ms)
 	close(ms->saved_stderr);
 }
 
-int	handle_redirections(t_command *command)
+int	handle_redirections(t_minishell *ms, t_command *command)
 {
 	t_list	*redir_node;
 	t_redir	*redir;
@@ -401,7 +401,8 @@ int	handle_redirections(t_command *command)
 			fd = open(redir->filename, O_RDONLY);
 			if (fd < 0)
 			{
-				ft_putstr_fd("Error opening file\n", STDERR_FILENO);
+				ft_putstr_fd(" No such file or directory\n", STDERR_FILENO);
+				ms->last_exit_status = 1;
 				return (FAILURE);
 			}
 			dup2(fd, STDIN_FILENO);
@@ -418,8 +419,11 @@ void	exec_command(t_minishell *ms, t_command *command, t_list *envs)
 	char	**envs_arr;
 
 	if (!command || !command->command)
-		exit(-1);
-	handle_redirections(command);
+		exit(1);
+	if (handle_redirections(ms, command) == FAILURE)
+	{
+		exit(1);
+	}
 	cmd_path = get_path_for_executable(ms, command->command);
 	if (!cmd_path)
 	{
