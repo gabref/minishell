@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 08:55:48 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/31 13:30:50 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/01 02:43:22 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@
 
 # define SUCCESS 1
 # define FAILURE 0
+
+# define CWD_PATH_MAX 1024
 
 /*
  *	t_history
@@ -120,12 +122,19 @@ typedef struct s_minishell
 	int				saved_stdin;
 	int				saved_stdout;
 	int				saved_stderr;
+	int 			exit_ms;
 	pid_t			pid;
 	pid_t			*pids;
 	t_ebt			*ebt;
 	t_list			*env;
 	t_history		history;
 }					t_minishell;
+
+typedef struct s_builtin
+{
+	const char		*name;
+	void			(*builtin_func)(t_minishell *ms, char **args);
+}					t_builtin;
 
 /* initializes the minishell struct */
 void				init_minishell(t_minishell *msh, char **env);

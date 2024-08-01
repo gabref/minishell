@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:46:40 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/31 14:03:42 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/01 02:47:14 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	init_minishell(t_minishell *ms, char **env)
 	ms->saved_stdin = 0;
 	ms->saved_stdout = 0;
 	ms->saved_stderr = 0;
+	ms->exit_ms = -1;
 }
 
 void	destroy_env(void *content)

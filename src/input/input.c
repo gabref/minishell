@@ -6,7 +6,7 @@
 /*   By: ldi-fior <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 16:04:19 by cmaestri          #+#    #+#             */
-/*   Updated: 2024/07/31 19:40:20 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/01 02:46:20 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,7 @@ char	*get_input(t_minishell *ms)
 	ms->ebt = NULL;
 	input = readline("$> ");
 	if (!input)
-	{
-		ft_printf(RED "exit\n" RST);
 		return (NULL);
-	}
 	if (input[0] != '\0')
 		ms_append_history(ms, input);
 	return (input);

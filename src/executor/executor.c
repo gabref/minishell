@@ -2,12 +2,266 @@
 #include "../../inc/minishell.h"
 #include "../../inc/parser.h"
 #include "../../inc/utils.h"
+#include <fcntl.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
-int		exec_ebt(t_minishell *ms, t_ebt *ebt);
+int				exec_ebt(t_minishell *ms, t_ebt *ebt);
+
+int	find_string_2d_array(char *str, char **arr)
+{
+	int	i;
+
+	i = 0;
+	if (!arr)
+		return (-1);
+	while (arr && arr[i])
+	{
+		if (ft_strncmp(str, arr[i], ft_strlen(str)) == 0)
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+void	builtin_echo(t_minishell *ms, char **args)
+{
+	bool	newline;
+	int		i;
+
+	(void)ms;
+	newline = true;
+	i = 0;
+	if (find_string_2d_array("-n", args) == 0)
+		newline = false;
+	while (args && args[i])
+	{
+		ft_putstr_fd(args[i], STDOUT_FILENO);
+		if (args[i + 1])
+			ft_putchar_fd(' ', STDOUT_FILENO);
+		i++;
+	}
+	if (newline)
+		ft_putchar_fd('\n', STDOUT_FILENO);
+}
+
+void	builtin_cd(t_minishell *ms, char **args)
+{
+	char		*new_path;
+	struct stat	path_stat;
+	char		*old_path;
+
+	(void)ms;
+	new_path = NULL;
+	if (args != NULL && args[0] != NULL)
+		new_path = args[0];
+	if (new_path == NULL)
+	{
+		new_path = ms_get_env(ms, "HOME");
+		if (!new_path)
+		{
+			ft_putstr_fd("no HOME env variable set\n", STDERR_FILENO);
+			return ;
+		}
+	}
+	else if (ft_strncmp(new_path, "~", 1) == 0)
+	{
+		new_path = ms_get_env(ms, "HOME");
+		if (!new_path)
+		{
+			ft_putstr_fd("no HOME env variable set\n", STDERR_FILENO);
+			return ;
+		}
+	}
+	else if (ft_strncmp(new_path, "-", 1) == 0)
+	{
+		new_path = ms_get_env(ms, "OLDPWD");
+		if (!new_path)
+		{
+			ft_putstr_fd("no OLDPWD env variable set\n", STDERR_FILENO);
+			return ;
+		}
+	}
+	else
+		new_path = ft_strdup(new_path);
+	if (stat(new_path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode) == 0)
+	{
+		ft_putstr_fd("directory does not exists\n", 2);
+		free(new_path);
+		return ;
+	}
+	if (chdir(new_path) != 0)
+	{
+		ft_putstr_fd("directory does not exists\n", 2);
+		free(new_path);
+		return ;
+	}
+	free(new_path);
+	new_path = getcwd(NULL, PATH_MAX);
+	if (new_path == NULL)
+	{
+		return ;
+	}
+	old_path = ms_get_env(ms, "PWD");
+	ms_set_env(ms, "OLDPATH", old_path);
+	ms_set_env(ms, "PWD", new_path);
+	free(old_path);
+	free(new_path);
+}
+
+void	builtin_pwd(t_minishell *ms, char **args)
+{
+	char	*pwd;
+
+	(void)args;
+	pwd = ms_get_env(ms, "PWD");
+	ft_putstr_fd(pwd, STDOUT_FILENO);
+	ft_putstr_fd("\n", STDOUT_FILENO);
+	free(pwd);
+}
+
+void ms_remove_env(t_minishell *ms, char *key)
+{
+	t_list	*node;
+	t_list	*prev;
+	t_env	*env;
+
+	node = ms->env;
+	prev = NULL;
+	while (node)
+	{
+		env = (t_env *)node->content;
+		if (ft_strncmp(env->key, key, ft_strlen(env->key)) == 0)
+		{
+			if (prev == NULL)
+				ms->env = node->next;
+			else
+				prev->next = node->next;
+			free(env->key);
+			free(env->value);
+			free(env);
+			free(node);
+			return ;
+		}
+		prev = node;
+		node = node->next;
+	}
+}
+
+void	builtin_unset(t_minishell *ms, char **args)
+{
+	int	i;
+
+	i = 0;
+	while (args && args[i])
+	{
+		ms_remove_env(ms, args[i]);
+		i++;
+	}
+}
+
+void	builtin_env(t_minishell *ms, char **args)
+{
+	(void)args;
+	print_envs(ms->env);
+}
+
+void	builtin_export(t_minishell *ms, char **args)
+{
+	char	**splitted;
+
+	if (!args || !args[0])
+	{
+		builtin_env(ms, args);
+		return ;
+	}
+	if (args && args[0] && args[1])
+		return ;
+	if (ft_strchr(args[0], '='))
+	{
+		splitted = ft_split(args[0], '=');
+		if (splitted && splitted[0] && splitted[1])
+			ms_set_env(ms, splitted[0], splitted[1]);
+		ft_free_2d_array((void **)splitted);
+	}
+}
+
+void	builtin_exit(t_minishell *ms, char **args)
+{
+	int	i;
+
+	i = 0;
+	if (args && args[0] && args[1])
+	{
+		ft_putstr_fd("too many arguments\n", STDERR_FILENO);
+		return ;
+	}
+	if (args && args[0])
+	{
+		while (args[0][i])
+		{
+			if (!ft_isdigit(args[0][i]))
+			{
+				ft_putstr_fd("numeric arguements required\n", STDERR_FILENO);
+				ms->exit_ms = 2;
+				return ;
+			}
+			i++;
+		}
+		ms->exit_ms = ft_atoi(args[0]);
+		return ;
+	}
+	ms->exit_ms = ms->last_exit_status;
+}
+
+const t_builtin	*get_builtins(void)
+{
+	static const t_builtin	builtins[] = {{"echo", builtin_echo}, {"cd",
+			builtin_cd}, {"pwd", builtin_pwd}, {"export", builtin_export},
+			{"unset", builtin_unset}, {"env", builtin_env}, {"exit",
+			builtin_exit}, {NULL, NULL}};
+
+	return (builtins);
+}
+
+bool	is_builtin(char *command)
+{
+	const t_builtin	*builtins;
+	int				i;
+
+	builtins = get_builtins();
+	i = 0;
+	while (builtins[i].name)
+	{
+		if (ft_strncmp(command, builtins[i].name, ft_strlen(command)) == 0)
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+void	execute_builtin(t_minishell *ms, t_command *command)
+{
+	const t_builtin	*builtins;
+	int				i;
+
+	builtins = get_builtins();
+	i = 0;
+	while (builtins[i].name)
+	{
+		if (ft_strncmp(command->command, builtins[i].name,
+				ft_strlen(command->command)) == 0)
+		{
+			builtins[i].builtin_func(ms, command->args);
+			return ;
+		}
+		i++;
+	}
+	ft_putstr_fd("Unknown builtin command\n", STDOUT_FILENO);
+}
 
 char	*get_path_for_executable(t_minishell *ms, char *command)
 {
@@ -187,6 +441,13 @@ int	fork_and_exec(t_minishell *ms, t_command *command)
 
 	if (!command || !command->command)
 		return (FAILURE);
+	if (is_builtin(command->command))
+	{
+		execute_builtin(ms, command);
+		if (ms->last_exit_status != 0)
+			return (FAILURE);
+		return (SUCCESS);
+	}
 	save_redirection_state(ms);
 	pid = fork();
 	if (pid < 0)
@@ -204,7 +465,7 @@ int	fork_and_exec(t_minishell *ms, t_command *command)
 	return (SUCCESS);
 }
 
-int	exec_pipe(t_minishell *ms, t_ebt *left, t_ebt *right, t_list *envs)
+int	exec_pipe(t_minishell *ms, t_ebt *left, t_ebt *right)
 {
 	int		pipe_fd[2];
 	pid_t	pid1;
@@ -212,7 +473,6 @@ int	exec_pipe(t_minishell *ms, t_ebt *left, t_ebt *right, t_list *envs)
 	int		status1;
 	int		status2;
 
-	(void)envs;
 	if (pipe(pipe_fd) < 0)
 	{
 		ft_putstr_fd("Error creating pipe\n", STDERR_FILENO);
@@ -270,7 +530,7 @@ int	exec_ebt(t_minishell *ms, t_ebt *ebt)
 	if (ebt->type == EBT_OP_COMMAND)
 		l_status = fork_and_exec(ms, ebt->command);
 	else if (ebt->type == EBT_OP_PIPE)
-		l_status = exec_pipe(ms, ebt->left, ebt->right, ms->env);
+		l_status = exec_pipe(ms, ebt->left, ebt->right);
 	else if (ebt->type == EBT_OP_AND)
 	{
 		l_status = exec_ebt(ms, ebt->left);

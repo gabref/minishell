@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:46:02 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/31 15:17:44 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/01 02:47:19 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ int	main(int ac, char **av, char **envp)
 {
 	t_minishell	ms;
 	char		*line;
+	int			ret;
 
+	ret = 0;
 	if (ac != 1 || av[1])
 	{
 		ft_printf(RED MSG_ERR_ARGS RST);
@@ -44,7 +46,12 @@ int	main(int ac, char **av, char **envp)
 			ms.last_exit_status = get_global_signal() + 128;
 			set_global_signal(0);
 		}
+		if (ms.exit_ms != -1)
+		{
+			ret = ms.exit_ms;
+			break ;
+		}
 	}
 	destroy_minishell(&ms);
-	return (0);
+	return (ret);
 }
