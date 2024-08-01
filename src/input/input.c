@@ -6,7 +6,7 @@
 /*   By: ldi-fior <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 16:04:19 by cmaestri          #+#    #+#             */
-/*   Updated: 2024/08/01 13:17:58 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/01 13:58:35 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char	*create_prompt(t_minishell *ms)
 
 	tmp[0] = get_prompt_user(ms);
 	tmp[1] = get_prompt_cd(ms);
-	tmp[2] = ft_strjoin(BLACK BBLACK , tmp[0]);
+	tmp[2] = ft_strjoin(BLACK BBLACK, tmp[0]);
 	tmp[3] = ft_strjoin(tmp[2], "@ms 󰄛" WHITE " ");
 	if (ms->last_exit_status != 0)
 		tmp[4] = ft_strjoin(tmp[1], RED);
@@ -94,30 +94,32 @@ char	*get_input(t_minishell *ms)
 	if (ms->ebt)
 		free_ebt(ms->ebt);
 	ms->ebt = NULL;
-	(void) prompt;
+	(void)prompt;
 	// prompt = create_prompt(ms);
 	input = readline("$> ");
 	// free(prompt);
-	if (!input)
+	if (input == NULL || input[0] == EOF || input[0] == '\0')
+	{
+		free(input);
 		return (NULL);
+	}
 	if (input[0] != '\0')
 		ms_append_history(ms, input);
 	return (input);
 }
 
-void test_print_token(void *ptr)
+void	test_print_token(void *ptr)
 {
-	t_token *token;
+	t_token	*token;
 
-	token = (t_token *) ptr;
+	token = (t_token *)ptr;
 	if (token->value == NULL)
 	{
 		ft_printf("token is NULL\n");
 		return ;
 	}
 	printf("token value:\t%s,\ttype: %d,\tstart idx: %d,\tcurrent idx: %d\n",
-		token->value, token->type, token->input_start_idx,
-		token->current_idx);
+		token->value, token->type, token->input_start_idx, token->current_idx);
 }
 
 void	ms_print_lexer(t_lexer *lex)
