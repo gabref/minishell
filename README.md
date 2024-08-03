@@ -7,6 +7,7 @@
 * [x] ctrl-c in the middle of a blocking command like cat
 * [ ] history
 * [ ] heredoc
+* [ ] glob
 
 ## Requirements
 
