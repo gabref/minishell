@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 12:47:43 by galves-f          #+#    #+#             */
-/*   Updated: 2024/08/01 16:19:02 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/05 17:19:35 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	substitute_envs(t_minishell *ms, char **value)
 	int		i;
 	int		j;
 	char	*env;
+	char	*tmp;
 
 	i = 0;
 	while (*((*value) + i))
@@ -69,7 +70,9 @@ void	substitute_envs(t_minishell *ms, char **value)
 			}
 			if (j == 1 && (*value)[i + 1] == '?')
 			{
-				substitute_str(value, i, i + 2, ft_itoa(ms->last_exit_status));
+				tmp = ft_itoa(ms->last_exit_status);
+				substitute_str(value, i, i + 2, tmp);
+				free(tmp);
 				i = 0;
 				continue ;
 			}
@@ -96,8 +99,8 @@ void	handle_around_double_quotes(char **str)
 {
 	if ((*str)[0] == '\"')
 		substitute_str(str, 0, 1, "");
-	if (ft_strlen(*str) > 2 && (*str)[ft_strlen(*str) - 1] == '\"' && (*str)[ft_strlen(*str)
-		- 2] != '\\')
+	if (ft_strlen(*str) > 2 && (*str)[ft_strlen(*str) - 1] == '\"'
+		&& (*str)[ft_strlen(*str) - 2] != '\\')
 		substitute_str(str, ft_strlen(*str) - 1, ft_strlen(*str), "");
 }
 

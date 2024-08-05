@@ -9,8 +9,26 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#define PERMISSION_CHECK_ERROR 2
+#define FILE_NOT_FOUND_ERROR 1
+#define PERMISSIONS_OK 0
 
 int				exec_ebt(t_minishell *ms, t_ebt *ebt);
+
+int check_file_permissions(const char *filepath, int flags)
+{
+	struct stat file_stat;
+
+	if (access(filepath, F_OK) != 0)
+		return (FILE_NOT_FOUND_ERROR);
+	if (stat(filepath, &file_stat) != 0)
+		return (PERMISSION_CHECK_ERROR);
+	if (!S_ISREG(file_stat.st_mode))
+		return FILE_NOT_FOUND_ERROR;
+	if (access(filepath, flags) != 0)
+		return (PERMISSION_CHECK_ERROR);
+	return PERMISSIONS_OK;
+}
 
 char	*read_file_to_string(int fd)
 {
@@ -316,7 +334,7 @@ int	is_directory(char *command)
 	return (0);
 }
 
-char	*get_path_for_executable(t_minishell *ms, char *command)
+char	*get_path_for_executable(t_minishell *ms, char *command, int *exit_code)
 {
 	char	*path;
 	char	*path_env;
@@ -326,8 +344,28 @@ char	*get_path_for_executable(t_minishell *ms, char *command)
 
 	if (ft_strchr(command, '/'))
 	{
-		if (!is_directory(command) && access(command, F_OK | X_OK) == 0)
+		if (is_directory(command))
+		{
+			ft_putstr_fd(" Is a directory\n", STDERR_FILENO);
+			*exit_code = 126;
+			return (NULL);
+		}
+		int file_permissions = check_file_permissions(command, X_OK);
+		if (file_permissions == FILE_NOT_FOUND_ERROR)
+		{
+			ft_putstr_fd(" No such file or directory\n", STDERR_FILENO);
+			*exit_code = 127;
+			return (NULL);
+		} else if (file_permissions == PERMISSION_CHECK_ERROR)
+		{
+			ft_putstr_fd(" Permission denied\n", STDERR_FILENO);
+			*exit_code = 126;
+			return (NULL);
+		}
+		if (access(command, F_OK | X_OK) == 0)
 			return (ft_strdup(command));
+		*exit_code = 127;
+		ft_printf("command not found: %s\n", command);
 		return (NULL);
 	}
 	path = NULL;
@@ -348,6 +386,11 @@ char	*get_path_for_executable(t_minishell *ms, char *command)
 	}
 	free(path_env);
 	ft_free_2d_array((void **)path_dirs);
+	if (cmd_path == NULL)
+	{
+		*exit_code = 127;
+		ft_putstr_fd(" command not found\n", STDERR_FILENO);
+	}
 	return (cmd_path);
 }
 
@@ -525,7 +568,9 @@ void	exec_command(t_minishell *ms, t_command *command, t_list *envs)
 {
 	char	*cmd_path;
 	char	**envs_arr;
+	int		exit_code;
 
+	exit_code = 0;
 	if (!command)
 		exit(1);
 	if (handle_redirections(ms, command) == FAILURE)
@@ -536,10 +581,10 @@ void	exec_command(t_minishell *ms, t_command *command, t_list *envs)
 	{
 		exit(0);
 	}
-	cmd_path = get_path_for_executable(ms, command->command);
+	cmd_path = get_path_for_executable(ms, command->command, &exit_code);
 	if (!cmd_path)
 	{
-		exit(127);
+		exit(exit_code);
 	}
 	envs_arr = get_envs(envs);
 	add_string_front(&command->args, cmd_path);
@@ -552,7 +597,7 @@ void	exec_command(t_minishell *ms, t_command *command, t_list *envs)
 	exit(-1);
 }
 
-void	exec_parent(t_minishell *ms, pid_t child_pid, char *command)
+void	exec_parent(t_minishell *ms, pid_t child_pid)
 {
 	int	status;
 
@@ -566,7 +611,6 @@ void	exec_parent(t_minishell *ms, pid_t child_pid, char *command)
 		ft_putstr_fd("Error waiting for child process\n", STDERR_FILENO);
 		return ;
 	}
-	ms->last_exit_status = 0;
 	if (WIFSIGNALED(status))
 	{
 		set_global_signal(WTERMSIG(status));
@@ -578,11 +622,7 @@ void	exec_parent(t_minishell *ms, pid_t child_pid, char *command)
 	if (WIFEXITED(status))
 	{
 		if (WEXITSTATUS(status) != 0)
-		{
-			if (WEXITSTATUS(status) == 127)
-				printf("command not found: %s\n", command);
 			ms->last_exit_status = WEXITSTATUS(status);
-		}
 	}
 }
 
@@ -592,6 +632,7 @@ int	fork_and_exec(t_minishell *ms, t_command *command)
 
 	if (!command)
 		return (FAILURE);
+	ms->last_exit_status = 0;
 	save_redirection_state(ms);
 	command->args = expand_wildcard(command->args);
 	if (is_builtin(command->command))
@@ -607,7 +648,7 @@ int	fork_and_exec(t_minishell *ms, t_command *command)
 		if (pid == 0)
 			exec_command(ms, command, ms->env);
 		else
-			exec_parent(ms, pid, command->command);
+			exec_parent(ms, pid);
 	}
 	restore_redirection_state(ms);
 	if (ms->last_exit_status != 0)
