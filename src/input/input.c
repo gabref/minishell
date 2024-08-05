@@ -6,7 +6,7 @@
 /*   By: ldi-fior <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 16:04:19 by cmaestri          #+#    #+#             */
-/*   Updated: 2024/08/05 17:17:41 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/05 20:14:08 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ char	*get_prompt_cd(t_minishell *ms)
 	if (ft_strncmp(pwd, home, ft_strlen(home)) == 0)
 		substitute_str(&pwd, 0, ft_strlen(home), "~");
 	free(home);
-	tmp = ft_strjoin(MAGENTA " 󰝰  ", pwd);
-	final = ft_strjoin(tmp, RST BLACK "");
+	tmp = ft_strjoin(MAGENTA "", pwd);
+	final = ft_strjoin(tmp, RST BLACK "");
 	free(pwd);
 	free(tmp);
 	return (final);
@@ -71,13 +71,13 @@ char	*create_prompt(t_minishell *ms)
 	tmp[0] = get_prompt_user(ms);
 	tmp[1] = get_prompt_cd(ms);
 	tmp[2] = ft_strjoin(BLACK BBLACK, tmp[0]);
-	tmp[3] = ft_strjoin(tmp[2], "@ms 󰄛" WHITE " ");
+	tmp[3] = ft_strjoin(tmp[2], "@ms"WHITE );
 	if (ms->last_exit_status != 0)
 		tmp[4] = ft_strjoin(tmp[1], RED);
 	else
 		tmp[4] = ft_strjoin(tmp[1], GREEN);
 	tmp[5] = ft_strjoin(tmp[3], tmp[4]);
-	prompt = ft_strjoin(tmp[5], "$> " RST);
+	prompt = ft_strjoin(tmp[5], " $> " RST);
 	free(tmp[0]);
 	free(tmp[1]);
 	free(tmp[2]);
@@ -95,10 +95,9 @@ char	*get_input(t_minishell *ms)
 	if (ms->ebt)
 		free_ebt(ms->ebt);
 	ms->ebt = NULL;
-	(void)prompt;
-	// prompt = create_prompt(ms);
-	input = readline("$> ");
-	// free(prompt);
+	prompt = create_prompt(ms);
+	input = readline(prompt);
+	free(prompt);
 	if (input == NULL)
 		return (NULL);
 	if (input[0] == '\0')

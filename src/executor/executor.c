@@ -168,6 +168,13 @@ void	builtin_pwd(t_minishell *ms, char **args)
 	free(pwd);
 }
 
+void builtin_clear(t_minishell *ms, char **args)
+{
+	(void)args;
+	(void)ms;
+	write(STDOUT_FILENO, "\033[H\033[J", 6);
+}
+
 void	ms_remove_env(t_minishell *ms, char *key)
 {
 	t_list	*node;
@@ -284,7 +291,7 @@ const t_builtin	*get_builtins(void)
 	static const t_builtin	builtins[] = {{"echo", builtin_echo}, {"cd",
 			builtin_cd}, {"pwd", builtin_pwd}, {"export", builtin_export},
 			{"unset", builtin_unset}, {"env", builtin_env}, {"exit",
-			builtin_exit}, {NULL, NULL}};
+			builtin_exit}, {"clear", builtin_clear}, {NULL, NULL}};
 
 	return (builtins);
 }
