@@ -15,19 +15,19 @@
 
 int				exec_ebt(t_minishell *ms, t_ebt *ebt);
 
-int check_file_permissions(const char *filepath, int flags)
+int	check_file_permissions(const char *filepath, int flags)
 {
-	struct stat file_stat;
+	struct stat	file_stat;
 
 	if (access(filepath, F_OK) != 0)
 		return (FILE_NOT_FOUND_ERROR);
 	if (stat(filepath, &file_stat) != 0)
 		return (PERMISSION_CHECK_ERROR);
 	if (!S_ISREG(file_stat.st_mode))
-		return FILE_NOT_FOUND_ERROR;
+		return (FILE_NOT_FOUND_ERROR);
 	if (access(filepath, flags) != 0)
 		return (PERMISSION_CHECK_ERROR);
-	return PERMISSIONS_OK;
+	return (PERMISSIONS_OK);
 }
 
 char	*read_file_to_string(int fd)
@@ -341,6 +341,7 @@ char	*get_path_for_executable(t_minishell *ms, char *command, int *exit_code)
 	char	*cmd_path;
 	char	**path_dirs;
 	int		i;
+	int		file_permissions;
 
 	if (ft_strchr(command, '/'))
 	{
@@ -350,13 +351,14 @@ char	*get_path_for_executable(t_minishell *ms, char *command, int *exit_code)
 			*exit_code = 126;
 			return (NULL);
 		}
-		int file_permissions = check_file_permissions(command, X_OK);
+		file_permissions = check_file_permissions(command, X_OK);
 		if (file_permissions == FILE_NOT_FOUND_ERROR)
 		{
 			ft_putstr_fd(" No such file or directory\n", STDERR_FILENO);
 			*exit_code = 127;
 			return (NULL);
-		} else if (file_permissions == PERMISSION_CHECK_ERROR)
+		}
+		else if (file_permissions == PERMISSION_CHECK_ERROR)
 		{
 			ft_putstr_fd(" Permission denied\n", STDERR_FILENO);
 			*exit_code = 126;
@@ -506,7 +508,15 @@ int	handle_redirections(t_minishell *ms, t_command *command)
 					fd = open(redir->filename, flags, 0644);
 					if (fd < 0)
 					{
-						ft_putstr_fd("Error opening file\n", STDERR_FILENO);
+						if (check_file_permissions(redir->filename,
+								W_OK) == PERMISSION_CHECK_ERROR)
+							ft_putstr_fd(" Permission denied\n", STDERR_FILENO);
+						else if (check_file_permissions(redir->filename,
+								W_OK) == FILE_NOT_FOUND_ERROR)
+							ft_putstr_fd(" No such file or directory\n",
+								STDERR_FILENO);
+						else
+							ft_putstr_fd("Error opening file\n", STDERR_FILENO);
 						free(heredoc_input);
 						return (FAILURE);
 					}
@@ -536,7 +546,14 @@ int	handle_redirections(t_minishell *ms, t_command *command)
 			fd = open(redir->filename, flags, 0644);
 			if (fd < 0)
 			{
-				ft_putstr_fd("Error opening file\n", STDERR_FILENO);
+				if (check_file_permissions(redir->filename,
+						W_OK) == PERMISSION_CHECK_ERROR)
+					ft_putstr_fd(" Permission denied\n", STDERR_FILENO);
+				else if (check_file_permissions(redir->filename,
+						W_OK) == FILE_NOT_FOUND_ERROR)
+					ft_putstr_fd(" No such file or directory\n", STDERR_FILENO);
+				else
+					ft_putstr_fd("Error opening file\n", STDERR_FILENO);
 				return (FAILURE);
 			}
 			if (redir->from == RT_STDOUT)
@@ -550,7 +567,14 @@ int	handle_redirections(t_minishell *ms, t_command *command)
 			fd = open(redir->filename, O_RDONLY);
 			if (fd < 0)
 			{
-				ft_putstr_fd(" No such file or directory\n", STDERR_FILENO);
+				if (check_file_permissions(redir->filename,
+						R_OK) == PERMISSION_CHECK_ERROR)
+					ft_putstr_fd(" Permission denied\n", STDERR_FILENO);
+				else if (check_file_permissions(redir->filename,
+						R_OK) == FILE_NOT_FOUND_ERROR)
+					ft_putstr_fd(" No such file or directory\n", STDERR_FILENO);
+				else
+					ft_putstr_fd("Error opening file\n", STDERR_FILENO);
 				ms->last_exit_status = 1;
 				return (FAILURE);
 			}
