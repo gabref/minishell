@@ -11,6 +11,25 @@
 
 int				exec_ebt(t_minishell *ms, t_ebt *ebt);
 
+char	*read_file_to_string(int fd)
+{
+	char	*file_as_string;
+	char	*line;
+	char	*tmp;
+
+	line = get_next_line(fd);
+	file_as_string = ft_strdup("");
+	while (line != NULL)
+	{
+		tmp = file_as_string;
+		file_as_string = ft_strjoin(tmp, line);
+		free(line);
+		free(tmp);
+		line = get_next_line(fd);
+	}
+	return (file_as_string);
+}
+
 int	find_string_2d_array(char *str, char **arr)
 {
 	int	i;
@@ -130,7 +149,7 @@ void	builtin_pwd(t_minishell *ms, char **args)
 	free(pwd);
 }
 
-void ms_remove_env(t_minishell *ms, char *key)
+void	ms_remove_env(t_minishell *ms, char *key)
 {
 	t_list	*node;
 	t_list	*prev;
@@ -287,7 +306,7 @@ void	execute_builtin(t_minishell *ms, t_command *command)
 	ft_putstr_fd("Unknown builtin command\n", STDOUT_FILENO);
 }
 
-int is_directory(char *command)
+int	is_directory(char *command)
 {
 	struct stat	path_stat;
 
@@ -377,13 +396,90 @@ void	restore_redirection_state(t_minishell *ms)
 	close(ms->saved_stderr);
 }
 
+char	*handle_heredoc(t_command *command)
+{
+	int		pipe_fd[2];
+	char	*line;
+	size_t	len;
+	char	*heredoc_input;
+
+	if (pipe(pipe_fd) < 0)
+	{
+		ft_putstr_fd("Error creating pipe\n", STDERR_FILENO);
+		return (FAILURE);
+	}
+	while (true)
+	{
+		ft_putstr_fd(command->heredoc_word, STDOUT_FILENO);
+		ft_putstr_fd("> ", STDOUT_FILENO);
+		line = get_next_line(STDIN_FILENO);
+		if (!line)
+			break ;
+		len = ft_strlen(line);
+		if (ft_strncmp(line, command->heredoc_word, len - 1) == 0 && line[len
+			- 1] == '\n')
+		{
+			free(line);
+			break ;
+		}
+		write(pipe_fd[1], line, len);
+		free(line);
+	}
+	close(pipe_fd[1]);
+	heredoc_input = read_file_to_string(pipe_fd[0]);
+	close(pipe_fd[0]);
+	return (heredoc_input);
+}
+
 int	handle_redirections(t_minishell *ms, t_command *command)
 {
 	t_list	*redir_node;
 	t_redir	*redir;
 	int		flags;
 	int		fd;
+	char	*heredoc_input;
 
+	heredoc_input = NULL;
+	if (command->heredoc)
+	{
+		heredoc_input = handle_heredoc(command);
+		if (!heredoc_input)
+		{
+			ms->last_exit_status = 1;
+			return (FAILURE);
+		}
+		if (command->redirections)
+		{
+			redir_node = command->redirections;
+			while (redir_node)
+			{
+				redir = (t_redir *)redir_node->content;
+				if (redir->to == RT_WRITE || redir->to == RT_APPEND)
+				{
+					flags = O_WRONLY | O_CREAT;
+					if (redir->to == RT_APPEND)
+						flags |= O_APPEND;
+					fd = open(redir->filename, flags, 0644);
+					if (fd < 0)
+					{
+						ft_putstr_fd("Error opening file\n", STDERR_FILENO);
+						free(heredoc_input);
+						return (FAILURE);
+					}
+					write(fd, heredoc_input, ft_strlen(heredoc_input));
+					close(fd);
+				}
+				redir_node = redir_node->next;
+			}
+			free(heredoc_input);
+			heredoc_input = NULL;
+		}
+		else
+		{
+			ft_putstr_fd(heredoc_input, STDOUT_FILENO);
+			free(heredoc_input);
+		}
+	}
 	redir_node = command->redirections;
 	while (redir_node)
 	{
@@ -419,6 +515,8 @@ int	handle_redirections(t_minishell *ms, t_command *command)
 		}
 		redir_node = redir_node->next;
 	}
+	if (!command->heredoc)
+		free(heredoc_input);
 	return (SUCCESS);
 }
 
@@ -427,18 +525,22 @@ void	exec_command(t_minishell *ms, t_command *command, t_list *envs)
 	char	*cmd_path;
 	char	**envs_arr;
 
-	if (!command || !command->command)
+	if (!command)
 		exit(1);
 	// config_signals();
 	if (handle_redirections(ms, command) == FAILURE)
 	{
 		exit(1);
 	}
+	if (!command->command)
+	{
+		exit(0);
+	}
 	if (is_builtin(command->command))
 	{
 		execute_builtin(ms, command);
 		if (ms->last_exit_status != 0)
-			exit (ms->last_exit_status);
+			exit(ms->last_exit_status);
 		exit(0);
 	}
 	cmd_path = get_path_for_executable(ms, command->command);
@@ -495,7 +597,7 @@ int	fork_and_exec(t_minishell *ms, t_command *command)
 {
 	pid_t	pid;
 
-	if (!command || !command->command)
+	if (!command)
 		return (FAILURE);
 	save_redirection_state(ms);
 	pid = fork();
