@@ -16,6 +16,11 @@ Requirements to test de project:
 apt-get install libcriterion-dev
 ```
 
+Also readline library is needed:
+```bash
+sudo apt-get install libreadline-dev
+```
+
 # Minishell Research and Planning
 
 ## Repositories
@@ -38,153 +43,5 @@ apt-get install libcriterion-dev
 ## About git for who wants to learn more
 [Git for beginners](https://learngitbranching.js.org/)
 
-## Some random intereseting links
-* [Noice simple version of shell](https://brennan.io/2015/01/16/write-a-shell-in-c/)
-* [Another simple version of shell](https://www.geeksforgeeks.org/making-linux-shell-c/)
-* [The pdf in 42docs](https://www.cs.purdue.edu/homes/grr/SystemsProgrammingBook/Book/Chapter5-WritingYourOwnShell.pdf)
-
-## Some practice Studies
-* [AST in typescript](./ast-example-js/)
-* [AST in C](./ast-example-c/)
-
-# PLANNING AND DIVISION OF TASKS
-
-### Requirements
-* [x] Mandatory part
-* [ ] Bonus part (will do?)
-
-## Parts of the Program
-<br>
-
-```
-INIT_MINISHELL -> GET_USER_DATA -> LEXER -> EXPANDER -> PARSER -> EXECUTOR
-```
-
-### INIT_MINISHELL
-* [ ] Initialize structure minishell
-    ```c
-    typedef struct s_minishell
-    {
-        t_list  *env; // or hashmap
-        t_list  *commands;
-        pid_t   pid; // pid of the shell
-        pid_t   *pids; // pids of the children
-        char    **history; // history of commands
-    } t_minishell;
-    ```
-* [ ] Initialize environment variables
-    * SHLVL - shell level
-    * PWD - present working directory
-    * HOME - home directory
-    * OLDPWD - old present working directory
-    * PATH - path to the executables
-    * _ - name of the shell
-
-### GET_USER_DATA
-* [ ] Get user input
-    * [ ] Handle signals
-        * need a function handle_exit, that frees all the memory of all parts of the program
-    * [ ] Create prompt
-        * Print the prompt ($> )
-    * [ ] Read line
-    * [ ] Add to history
-
-### LEXER
-* [ ] Tokenize the input (return a list of tokens)
-    * [ ] Handle quotes
-    * [ ] Handle escape characters
-    * [ ] Handle redirections
-    * [ ] Handle pipes
-    * [ ] Handle semicolons
-    * [ ] Handle newlines
-    * [ ] Handle EOF
-
-Lexer will return a list of tokens <br>
-The lexer structure could look like this:
-```c
-typedef enum e_token_type
-{
-    WORD,
-    PIPE,
-    SEMICOLON,
-    GREAT,
-    DGREAT,
-    LESS,
-    DLESS,
-    NEWLINE,
-    AND,
-    OR,
-    EOF
-} t_token_type;
-
-typedef struct s_token
-{
-    // first two are for debugging porpuses
-    int         input_start_idx;
-    int         current_idx;
-    char        *value;
-    t_token_type type;
-} t_token;
-
-typedef struct s_lexer
-{
-    t_list *tokens;
-    int     size;
-} t_lexer;
-
-/** 
-  * input will be the entry string from the prompt
-  * return will have a list of tokens that represent the input
-  */
-t_lexer *lexer(char *input);
-```
-
-### EXPANDER
-* [ ] Expand the tokens
-    * [ ] Handle environment variables
-        example: $HOME -> /home/user (attention to quotes double quotes edge cases)
-    * [ ] Handle tilde
-        * ~ -> home directory
-    * [ ] Handle wildcard (bonus) -> glob -> create a copy of the command with the wildcard expanded
-    * [ ] Handle command substitution 
-        * example: echo $(ls) -> execute ls and replace the $(ls) with the output of the command
-
-### PARSER
-* [ ] Parse the tokens (return a list of commands)
-    * [ ] Handle redirections
-    * [ ] Handle pipes
-    * [ ] Handle semicolons
-    * [ ] Handle newlines
-    * [ ] Handle EOF
-
-Parser will return a list of commands <br>
-Each command could look like this:
-```c
-typedef struct s_command
-{
-    char    *command;
-    char    **args;
-    char    *heredoc_file_name;
-    t_token *fd;
-} t_command;
-
-typedef struct s_commands
-{
-    t_list *commands;
-} t_commands;
-```
-
-### EXECUTOR
-* [ ] Execute the commands
-    * [ ] Handle redirections (open files and redirect stdin, stdout, stderr)
-    * [ ] Handle executables
-        * [ ] Handle builtins
-            * [ ] echo
-            * [ ] cd (cd - and cd ~)
-            * [ ] pwd
-            * [ ] export
-            * [ ] unset
-            * [ ] env
-            * [ ] exit
-    * [ ] wait for the children to finish and handle errors
-    * [ ] clean memory, loop will restart
+## Working commit before norminette
+* (Working commit before norminette - f34a42d)[https://github.com/gabref/minishell/tree/f34a42d94fb072cc0eac350af50563ca90dea5fc]
