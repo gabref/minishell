@@ -1,8 +1,8 @@
+#include "../../inc/glob.h"
 #include "../../inc/initializers.h"
 #include "../../inc/minishell.h"
 #include "../../inc/parser.h"
 #include "../../inc/utils.h"
-#include "../../inc/glob.h"
 #include <fcntl.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -528,20 +528,12 @@ void	exec_command(t_minishell *ms, t_command *command, t_list *envs)
 
 	if (!command)
 		exit(1);
-	command->args = expand_wildcard(command->args);
 	if (handle_redirections(ms, command) == FAILURE)
 	{
 		exit(1);
 	}
 	if (!command->command)
 	{
-		exit(0);
-	}
-	if (is_builtin(command->command))
-	{
-		execute_builtin(ms, command);
-		if (ms->last_exit_status != 0)
-			exit(ms->last_exit_status);
 		exit(0);
 	}
 	cmd_path = get_path_for_executable(ms, command->command);
@@ -601,16 +593,22 @@ int	fork_and_exec(t_minishell *ms, t_command *command)
 	if (!command)
 		return (FAILURE);
 	save_redirection_state(ms);
-	pid = fork();
-	if (pid < 0)
-	{
-		ft_putstr_fd("Error forking process\n", STDERR_FILENO);
-		return (FAILURE);
-	}
-	if (pid == 0)
-		exec_command(ms, command, ms->env);
+	command->args = expand_wildcard(command->args);
+	if (is_builtin(command->command))
+		execute_builtin(ms, command);
 	else
-		exec_parent(ms, pid, command->command);
+	{
+		pid = fork();
+		if (pid < 0)
+		{
+			ft_putstr_fd("Error forking process\n", STDERR_FILENO);
+			return (FAILURE);
+		}
+		if (pid == 0)
+			exec_command(ms, command, ms->env);
+		else
+			exec_parent(ms, pid, command->command);
+	}
 	restore_redirection_state(ms);
 	if (ms->last_exit_status != 0)
 		return (FAILURE);
