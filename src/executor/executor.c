@@ -434,6 +434,13 @@ void	exec_command(t_minishell *ms, t_command *command, t_list *envs)
 	{
 		exit(1);
 	}
+	if (is_builtin(command->command))
+	{
+		execute_builtin(ms, command);
+		if (ms->last_exit_status != 0)
+			exit (ms->last_exit_status);
+		exit(0);
+	}
 	cmd_path = get_path_for_executable(ms, command->command);
 	if (!cmd_path)
 	{
@@ -490,13 +497,6 @@ int	fork_and_exec(t_minishell *ms, t_command *command)
 
 	if (!command || !command->command)
 		return (FAILURE);
-	if (is_builtin(command->command))
-	{
-		execute_builtin(ms, command);
-		if (ms->last_exit_status != 0)
-			return (FAILURE);
-		return (SUCCESS);
-	}
 	save_redirection_state(ms);
 	pid = fork();
 	if (pid < 0)
