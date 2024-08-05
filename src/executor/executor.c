@@ -2,6 +2,7 @@
 #include "../../inc/minishell.h"
 #include "../../inc/parser.h"
 #include "../../inc/utils.h"
+#include "../../inc/glob.h"
 #include <fcntl.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -527,7 +528,7 @@ void	exec_command(t_minishell *ms, t_command *command, t_list *envs)
 
 	if (!command)
 		exit(1);
-	// config_signals();
+	command->args = expand_wildcard(command->args);
 	if (handle_redirections(ms, command) == FAILURE)
 	{
 		exit(1);

@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/07/30 16:15:25 by galves-f         ###   ########.fr        #
+#    Updated: 2024/08/05 16:23:56 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,6 +47,7 @@ SRCS 			= initializer/init.c \
   				  lexer/lexer.c \
   				  expander/expander.c \
   				  executor/executor.c \
+  				  glob/glob.c \
 
 MAIN			= main.c
 # MAIN			= ../tests/parser/main.c
