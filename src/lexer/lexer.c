@@ -115,20 +115,19 @@ bool	is_quote(char c)
 
 bool	is_single_alone_operator(char c)
 {
-	return (c == '<' || c == '|' || c == ';' || c == '\n' || c == '\\');
+	return (c == ';' || c == '\n' || c == '\\');
 }
 
 bool	is_operator(char c)
 {
-	return (c == '>');
+	return (c == '<' || c == '|' || c == '>');
 }
 
 bool	is_single_operator(char *input, int idx)
 {
 	if (!input)
 		return (false);
-	return (is_operator(input[idx]) && (input[idx + 1] == '\0'
-			|| ft_isspace(input[idx + 1])));
+	return (is_operator(input[idx]) && !is_operator(input[idx + 1]));
 }
 
 bool	is_double_operator(char *input, int idx)
@@ -150,6 +149,10 @@ bool	lexer_create_operator(t_lexer *lex, char *input)
 
 	if (input[lex->size] == '&')
 		type = AND;
+	if (input[lex->size] == '|')
+		type = PIPE;
+	else if (input[lex->size] == '<')
+		type = O_ANGLE_BRACKET;
 	else if (input[lex->size] == '>')
 		type = C_ANGLE_BRACKET;
 	else if (input[lex->size] == '!')
@@ -170,11 +173,7 @@ bool	lexer_create_single_alone_operator(t_lexer *lex, char *input)
 	t_token			*token;
 	char			*value;
 
-	if (input[lex->size] == '|')
-		type = PIPE;
-	else if (input[lex->size] == '<')
-		type = O_ANGLE_BRACKET;
-	else if (input[lex->size] == ';')
+	if (input[lex->size] == ';')
 		type = SEMICOLON;
 	else if (input[lex->size] == '\n')
 		type = N_LINE;
