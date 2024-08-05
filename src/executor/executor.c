@@ -151,7 +151,7 @@ void	builtin_cd(t_minishell *ms, char **args)
 		return ;
 	}
 	old_path = ms_get_env(ms, "PWD");
-	ms_set_env(ms, "OLDPATH", old_path);
+	ms_set_env(ms, "OLDPWD", old_path);
 	ms_set_env(ms, "PWD", new_path);
 	free(old_path);
 	free(new_path);
