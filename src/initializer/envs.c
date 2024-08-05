@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 12:57:52 by galves-f          #+#    #+#             */
-/*   Updated: 2024/04/15 16:06:25 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/01 03:55:44 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,17 @@ static char	*get_env(char *var, char **env)
 static char	*default_env_value(char *key)
 {
 	int		i;
-	t_env	env_mapping[7];
+	t_env	env_mapping[8];
 
 	env_mapping[0] = (t_env){.key = "SHLVL", .value = "1"};
 	env_mapping[1] = (t_env){.key = "PWD", .value = "/"};
 	env_mapping[2] = (t_env){.key = "OLDPWD", .value = "/"};
 	env_mapping[3] = (t_env){.key = "HOME", .value = "/"};
 	env_mapping[4] = (t_env){.key = "USER", .value = "default_user"};
-	env_mapping[5] = (t_env){.key = "PATH",
+	env_mapping[5] = (t_env){.key = "TERM", .value = "xterm-256color"};
+	env_mapping[6] = (t_env){.key = "PATH",
 		.value = "/usr/local/sbin:/usr/local/bin:/usr/bin:/bin"};
-	env_mapping[6] = (t_env){.key = "_", .value = "minishell"};
+	env_mapping[7] = (t_env){.key = "_", .value = "minishell"};
 	i = -1;
 	while (env_mapping[++i].key)
 		if (ft_strncmp(key, env_mapping[i].key,
@@ -106,6 +107,7 @@ t_list	*get_env_list(char **env)
 	append_env_node(&env_list, "OLDPWD", env);
 	append_env_node(&env_list, "HOME", env);
 	append_env_node(&env_list, "USER", env);
+	append_env_node(&env_list, "TERM", env);
 	append_env_node(&env_list, "PATH", env);
 	append_env_node(&env_list, "_", env);
 	return (env_list);

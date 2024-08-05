@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 08:55:48 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/25 00:36:07 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/01 02:43:22 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+
+# define SUCCESS 1
+# define FAILURE 0
+
+# define CWD_PATH_MAX 1024
 
 /*
  *	t_history
@@ -114,6 +119,10 @@ typedef struct s_ebt
 typedef struct s_minishell
 {
 	int				last_exit_status;
+	int				saved_stdin;
+	int				saved_stdout;
+	int				saved_stderr;
+	int 			exit_ms;
 	pid_t			pid;
 	pid_t			*pids;
 	t_ebt			*ebt;
@@ -121,8 +130,16 @@ typedef struct s_minishell
 	t_history		history;
 }					t_minishell;
 
+typedef struct s_builtin
+{
+	const char		*name;
+	void			(*builtin_func)(t_minishell *ms, char **args);
+}					t_builtin;
+
 /* initializes the minishell struct */
 void				init_minishell(t_minishell *msh, char **env);
+/* resets the minishell struct */
+void				reset_minishell(t_minishell *ms);
 /* frees all the memory allocated for the minishell */
 void				destroy_minishell(t_minishell *msh);
 
@@ -144,8 +161,5 @@ void				ms_append_history(t_minishell *ms, char *line);
 char				*get_history_idx(t_minishell *ms, int idx);
 /* for debugging, print the entire history of commands */
 void				print_history(t_minishell *ms);
-
-void				set_global_error(int error_code);
-int					get_global_error(void);
 
 #endif

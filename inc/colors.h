@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:45:52 by galves-f          #+#    #+#             */
-/*   Updated: 2024/06/14 18:15:24 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/01 03:09:03 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,16 @@
 # define MAGENTA_BOLD "\033[1;35m"
 # define CYAN_BOLD "\033[1;36m"
 # define WHITE_BOLD "\033[1;37m"
+
+# define BGRAY "\001\033[0;100m\002"
+# define BBLACK "\001\033[40m\002"
+# define BRED "\001\033[0;101m\002"
+# define BGREEN "\001\033[0;102m\002"
+# define BYELLOW "\001\033[0;103m\002"
+# define BBLUE "\001\033[0;104m\002"
+# define BMAGENTA "\001\033[0;105m\002"
+# define BCYAN "\001\033[0;9106m\002"
+# define BWHITE "\001\033[0;107m\002"
 
 # define SPACES "   "
 

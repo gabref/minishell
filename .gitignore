@@ -57,3 +57,4 @@ Mkfile.old
 dkms.conf
 
 tests/bin
+minishell_tester

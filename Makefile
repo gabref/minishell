@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/07/26 07:34:11 by galves-f         ###   ########.fr        #
+#    Updated: 2024/08/05 16:23:56 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,25 +38,19 @@ SRCS 			= initializer/init.c \
 				  initializer/envs.c \
 				  initializer/envs_utils.c \
 				  initializer/history.c \
-				  initializer/input.c \
+				  input/input.c \
+				  signals/signals.c \
 				  parser/parser.c \
 				  utils/safe_functions.c \
 				  utils/prints.c \
 				  utils/globals.c \
   				  lexer/lexer.c \
-  				  lexer/lexer_utils.c \
-  				  lexer/mini_lib_1.c \
-  				  lexer/mini_lib_2.c \
-  				  lexer/mini_lib_3.c \
-  				  lexer/token_1.c \
-  				  lexer/token_2.c \
-  				  lexer/token_3.c \
-  				  lexer/token_4.c \
-  				  lexer/tokenizer.c \
   				  expander/expander.c \
+  				  executor/executor.c \
+  				  glob/glob.c \
 
-# MAIN			= main.c
-MAIN			= ../tests/executor/main.c
+MAIN			= main.c
+# MAIN			= ../tests/parser/main.c
 
 LIBS_DIR 		= libs
 LIBFT_DIR 		= $(LIBS_DIR)/libft
@@ -204,7 +198,7 @@ install_libs: $(LIBS_DIR)
 	@$(MAKE) $(PRINTF_DIR)
 
 valgrind: all
-	@valgrind --leak-check=full --show-leak-kinds=all -s --track-origins=yes ./$(NAME)
+	@valgrind --leak-check=full --show-leak-kinds=all -s --track-origins=yes --suppressions=.ignore_readline_leaks.supp --child-silent-after-fork=yes ./$(NAME)
 
 $(LIBS_DIR):
 	@mkdir -p $(LIBS_DIR)

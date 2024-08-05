@@ -1,25 +1,39 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   globals.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/24 16:48:02 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/24 16:48:04 by galves-f         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../inc/utils.h"
 
-static int g_global_error= 0;
+static int g_signal;
 
-void				set_global_error(int error_code)
+void set_global_signal(int signum)
 {
-	g_global_error = error_code;
+	g_signal = signum;
 }
 
-int get_global_error()
+int get_global_signal(void)
 {
-	return (g_global_error);
+	return (g_signal);
 }
+
+void add_string_front(char ***array, char *str)
+{
+	int		i;
+	char	**new_array;
+
+	i = 0;
+	if (*array)
+		while ((*array)[i])
+			i++;
+	new_array = malloc(sizeof(char *) * (i + 2));
+	i = 0;
+	new_array[0] = str;
+	if (*array)
+	{
+		while ((*array)[i])
+		{
+			new_array[i + 1] = (*array)[i];
+			i++;
+		}
+		free(*array);
+	}
+	new_array[i + 1] = NULL;
+	*array = new_array;
+}
+
