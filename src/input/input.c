@@ -6,7 +6,7 @@
 /*   By: ldi-fior <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 16:04:19 by cmaestri          #+#    #+#             */
-/*   Updated: 2024/08/05 10:30:10 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/05 15:55:24 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	clean_screen(void)
 {
 	write(STDOUT_FILENO, "\033[H\033[J", 6);
 }
+
 
 char	*get_prompt_cd(t_minishell *ms)
 {

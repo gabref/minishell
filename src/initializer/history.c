@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 16:27:01 by galves-f          #+#    #+#             */
-/*   Updated: 2024/07/31 15:55:20 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/05 15:54:38 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	ms_append_history(t_minishell *ms, char *line)
 {
 	t_list	*node;
 
+	add_history(line);
 	node = ms->history.inputs;
 	while (node)
 	{

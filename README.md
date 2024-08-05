@@ -5,7 +5,7 @@
 * [x] only spaces or tabs as input
 * [x] enter after ctrl-c with text already written "the buffer should be clean, press enter to make sure nothing from previous prompt is executed"
 * [x] ctrl-c in the middle of a blocking command like cat
-* [ ] history
+* [x] history
 * [x] heredoc
 * [ ] glob
 
