@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/08/05 16:23:56 by galves-f         ###   ########.fr        #
+#    Updated: 2024/08/06 02:36:01 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,6 +47,18 @@ SRCS 			= initializer/init.c \
   				  lexer/lexer.c \
   				  expander/expander.c \
   				  executor/executor.c \
+  				  executor/file_operations.c \
+  				  executor/redirections.c \
+  				  executor/builtins.c \
+  				  executor/builtins/echo.c \
+  				  executor/builtins/cd.c \
+  				  executor/builtins/cd_path.c \
+  				  executor/builtins/pwd.c \
+  				  executor/builtins/export.c \
+  				  executor/builtins/unset.c \
+  				  executor/builtins/env.c \
+  				  executor/builtins/exit.c \
+  				  executor/builtins/clear.c \
   				  glob/glob.c \
 
 MAIN			= main.c

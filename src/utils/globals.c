@@ -37,3 +37,19 @@ void add_string_front(char ***array, char *str)
 	*array = new_array;
 }
 
+int	find_string_2d_array(char *str, char **arr)
+{
+	int	i;
+
+	i = 0;
+	if (!arr)
+		return (-1);
+	while (arr && arr[i])
+	{
+		if (ft_strncmp(str, arr[i], ft_strlen(str)) == 0)
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
