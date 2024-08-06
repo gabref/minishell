@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 10:44:14 by galves-f          #+#    #+#             */
-/*   Updated: 2024/08/06 10:46:13 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/06 11:21:13 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	open_redirection_file(t_minishell *ms, char *filename, int flags)
 		else
 			ft_putstr_fd("Error opening file\n", STDERR_FILENO);
 		ms->last_exit_status = 1;
-		return (FAILURE);
+		return (-1);
 	}
 	return (fd);
 }

@@ -14,6 +14,10 @@
 
 void	executor(t_minishell *ms);
 
+int		exec_ebt(t_minishell *ms, t_ebt *ebt);
+int		fork_and_exec(t_minishell *ms, t_command *command);
+int		exec_pipe(t_minishell *ms, t_ebt *left, t_ebt *right);
+
 int		check_file_permissions(const char *filepath, int flags);
 int		is_directory(char *command);
 char	**get_envs(t_list *envs);
@@ -28,7 +32,7 @@ int		handle_redirections(t_minishell *ms, t_command *command);
 
 char	*handle_heredoc(t_command *command);
 
-int	handle_heredoc_command(t_minishell *ms, t_command *command);
-int	open_redirection_file(t_minishell *ms, char *filename, int flags);
+int		handle_heredoc_command(t_minishell *ms, t_command *command);
+int		open_redirection_file(t_minishell *ms, char *filename, int flags);
 
 #endif

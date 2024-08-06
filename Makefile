@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/08/06 09:45:21 by galves-f         ###   ########.fr        #
+#    Updated: 2024/08/06 10:53:43 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,6 +49,8 @@ SRCS 			= initializer/init.c \
   				  executor/executor.c \
   				  executor/file_operations.c \
   				  executor/redirections.c \
+  				  executor/redirections_state.c \
+  				  executor/redirections_heredoc.c \
   				  executor/heredoc.c \
   				  executor/builtins.c \
   				  executor/builtins/echo.c \
