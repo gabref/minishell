@@ -28,4 +28,7 @@ int		handle_redirections(t_minishell *ms, t_command *command);
 
 char	*handle_heredoc(t_command *command);
 
+int	handle_heredoc_command(t_minishell *ms, t_command *command);
+int	open_redirection_file(t_minishell *ms, char *filename, int flags);
+
 #endif
