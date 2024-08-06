@@ -53,3 +53,28 @@ int	find_string_2d_array(char *str, char **arr)
 	return (-1);
 }
 
+void	substitute_str(char **str, int start, int end, char *sub)
+{
+	char	*newstr;
+	int		str_len;
+	int		sub_len;
+	int		i;
+	int		newstr_len;
+	int		j;
+
+	str_len = ft_strlen(*str);
+	sub_len = ft_strlen(sub);
+	newstr_len = str_len - (end - start) + sub_len;
+	newstr = safe_malloc(sizeof(char) * newstr_len + 1);
+	i = -1;
+	while (++i < start)
+		newstr[i] = (*str)[i];
+	j = 0;
+	while (i < start + sub_len)
+		newstr[i++] = sub[j++];
+	while (i < newstr_len)
+		newstr[i++] = (*str)[end++];
+	newstr[i] = '\0';
+	free(*str);
+	*str = newstr;
+}
