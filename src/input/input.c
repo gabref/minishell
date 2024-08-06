@@ -6,7 +6,7 @@
 /*   By: ldi-fior <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 16:04:19 by cmaestri          #+#    #+#             */
-/*   Updated: 2024/08/05 20:14:08 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/06 09:38:31 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ char	*get_input(t_minishell *ms)
 		free_ebt(ms->ebt);
 	ms->ebt = NULL;
 	prompt = create_prompt(ms);
-	input = readline(prompt);
+	input = readline("$> ");
 	free(prompt);
 	if (input == NULL)
 		return (NULL);
