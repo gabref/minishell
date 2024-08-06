@@ -26,4 +26,6 @@ void	restore_redirection_state(t_minishell *ms);
 char	*handle_heredoc(t_command *command);
 int		handle_redirections(t_minishell *ms, t_command *command);
 
+char	*handle_heredoc(t_command *command);
+
 #endif

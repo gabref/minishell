@@ -17,41 +17,6 @@ void	restore_redirection_state(t_minishell *ms)
 	close(ms->saved_stderr);
 }
 
-char	*handle_heredoc(t_command *command)
-{
-	int		pipe_fd[2];
-	char	*line;
-	size_t	len;
-	char	*heredoc_input;
-
-	if (pipe(pipe_fd) < 0)
-	{
-		ft_putstr_fd("Error creating pipe\n", STDERR_FILENO);
-		return (FAILURE);
-	}
-	while (true)
-	{
-		ft_putstr_fd(command->heredoc_word, STDOUT_FILENO);
-		ft_putstr_fd("> ", STDOUT_FILENO);
-		line = get_next_line(STDIN_FILENO);
-		if (!line)
-			break ;
-		len = ft_strlen(line);
-		if (ft_strncmp(line, command->heredoc_word, len - 1) == 0 && line[len
-			- 1] == '\n')
-		{
-			free(line);
-			break ;
-		}
-		write(pipe_fd[1], line, len);
-		free(line);
-	}
-	close(pipe_fd[1]);
-	heredoc_input = read_file_to_string(pipe_fd[0]);
-	close(pipe_fd[0]);
-	return (heredoc_input);
-}
-
 int	handle_redirections(t_minishell *ms, t_command *command)
 {
 	t_list	*redir_node;
