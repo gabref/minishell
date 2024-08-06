@@ -78,3 +78,23 @@ void	substitute_str(char **str, int start, int end, char *sub)
 	free(*str);
 	*str = newstr;
 }
+
+bool	string_all_spaces(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] != ' ' && str[i] != '\t' && str[i] != '\n' && str[i] != '\r')
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+bool free_and_return_bool(void *ptr, bool ret)
+{
+	free(ptr);
+	return (ret);
+}

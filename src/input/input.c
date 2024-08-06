@@ -6,7 +6,7 @@
 /*   By: ldi-fior <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 16:04:19 by cmaestri          #+#    #+#             */
-/*   Updated: 2024/08/06 13:51:53 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/06 13:58:41 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "../../inc/input.h"
 #include "../../inc/parser.h"
 #include "../../inc/utils.h"
-#include <unistd.h>
 
 char	*get_prompt_cd(t_minishell *ms)
 {
@@ -64,7 +63,7 @@ char	*create_prompt(t_minishell *ms)
 	tmp[0] = get_prompt_user(ms);
 	tmp[1] = get_prompt_cd(ms);
 	tmp[2] = ft_strjoin(BLACK BBLACK, tmp[0]);
-	tmp[3] = ft_strjoin(tmp[2], "@ms"WHITE );
+	tmp[3] = ft_strjoin(tmp[2], "@ms" WHITE);
 	if (ms->last_exit_status != 0)
 		tmp[4] = ft_strjoin(tmp[1], RED);
 	else
@@ -108,63 +107,19 @@ char	*get_input(t_minishell *ms)
 	return (input);
 }
 
-void	test_print_token(void *ptr)
-{
-	t_token	*token;
-
-	token = (t_token *)ptr;
-	if (token->value == NULL)
-	{
-		ft_printf("token is NULL\n");
-		return ;
-	}
-	printf("token value:\t%s,\ttype: %d,\tstart idx: %d,\tcurrent idx: %d\n",
-		token->value, token->type, token->input_start_idx, token->current_idx);
-}
-
-void	ms_print_lexer(t_lexer *lex)
-{
-	if (!lex)
-	{
-		ft_printf("no lexer\n");
-		return ;
-	}
-	ft_printf("size: %d\n", lex->size);
-	ft_lstiter(lex->tokens, test_print_token);
-}
-
-bool	string_all_spaces(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] != ' ' && str[i] != '\t' && str[i] != '\n' && str[i] != '\r')
-			return (false);
-		i++;
-	}
-	return (true);
-}
-
 bool	handle_input(t_minishell *ms, char *input)
 {
 	t_lexer	*lex;
 	t_ebt	*parser;
 
 	if (string_all_spaces(input))
-	{
-		free(input);
-		return (true);
-	}
+		free_and_return_bool(input, true);
 	lex = lexer(input);
 	if (!lex)
 	{
 		ft_printf(RED "lexer error\n" RST);
-		free(input);
-		return (false);
+		free_and_return_bool(input, false);
 	}
-	// ms_print_lexer(lex);
 	free(input);
 	expander(ms, lex);
 	parser = parse(ms, lex);

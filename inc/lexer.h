@@ -62,4 +62,7 @@ typedef struct s_lexer
 t_lexer				*lexer(char *input);
 void				free_lexer(t_lexer *lex);
 
+void				test_print_token(void *ptr);
+void				ms_print_lexer(t_lexer *lex);
+
 #endif
