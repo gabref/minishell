@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/08/06 15:02:26 by galves-f         ###   ########.fr        #
+#    Updated: 2024/08/06 20:31:47 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,11 +41,14 @@ SRCS 			= initializer/init.c \
 				  input/input.c \
 				  signals/signals.c \
 				  parser/parser.c \
+				  parser/parse_command.c \
+				  parser/parse_parenthesis.c \
+				  parser/parse_redirections.c \
+				  parser/handle_errors.c \
 				  parser/checks.c \
 				  parser/checks_tokens.c \
 				  parser/converts.c \
 				  parser/destroyers.c \
-				  parser/parse_command.c \
 				  parser/parser_ebt_utils.c \
 				  parser/parser_utils.c \
 				  parser/print_utils.c \

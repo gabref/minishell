@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 14:52:22 by galves-f          #+#    #+#             */
-/*   Updated: 2024/08/06 14:55:44 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/06 18:31:02 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,18 @@ void	*expect(t_minishell *ms, t_list **tokens, t_token_type type,
 	token = eat(tokens);
 	if (!token)
 	{
-		ft_printf(RED "Error: %s\n" RST, err_message);
+		if (ms->last_exit_status == 0)
+			ft_printf(RED "Error: %s\n" RST, err_message);
 		ms->last_exit_status = 1;
 		return (NULL);
 	}
 	else if (token->type != type)
 	{
-		ft_printf(RED "Error: %s\n", err_message);
-		ft_printf("got: %s\n" RST, token->value);
+		if (ms->last_exit_status == 0)
+		{
+			ft_printf(RED "Error: %s\n", err_message);
+			ft_printf("got: %s\n" RST, token->value);
+		}
 		ms->last_exit_status = 1;
 		return (NULL);
 	}

@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:46:02 by galves-f          #+#    #+#             */
-/*   Updated: 2024/08/06 14:10:54 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/06 20:57:48 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	initialize_minishell(t_minishell *ms, char **envp)
 {
 	config_signals();
 	init_minishell(ms, envp);
-	// print_welcome();
+	print_welcome();
 }
 
 static int	main_loop(t_minishell *ms)
