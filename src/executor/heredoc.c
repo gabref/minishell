@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/06 11:52:36 by galves-f          #+#    #+#             */
+/*   Updated: 2024/08/06 11:54:26 by galves-f         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../inc/executor.h"
 
 int	create_pipe(int *pipe_fd)
@@ -16,7 +28,7 @@ bool	is_end_of_heredoc(char *line, char *heredoc_word)
 
 	len = ft_strlen(line);
 	return (ft_strncmp(line, heredoc_word, len - 1) == 0 && line[len
-		- 1] == '\n');
+			- 1] == '\n');
 }
 
 void	write_to_pipe(int write_fd, char *str)

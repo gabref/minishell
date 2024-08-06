@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/08/06 10:53:43 by galves-f         ###   ########.fr        #
+#    Updated: 2024/08/06 12:13:21 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,6 +47,9 @@ SRCS 			= initializer/init.c \
   				  lexer/lexer.c \
   				  expander/expander.c \
   				  executor/executor.c \
+  				  executor/executor_pipe.c \
+  				  executor/executor_command.c \
+  				  executor/executor_exec_path.c \
   				  executor/file_operations.c \
   				  executor/redirections.c \
   				  executor/redirections_state.c \
