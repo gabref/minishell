@@ -6,7 +6,7 @@
 #    By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 10:00:31 by galves-f          #+#    #+#              #
-#    Updated: 2024/08/06 13:20:41 by galves-f         ###   ########.fr        #
+#    Updated: 2024/08/06 14:09:27 by galves-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,8 @@ SRCS 			= initializer/init.c \
 				  utils/safe_functions.c \
 				  utils/prints.c \
 				  utils/globals.c \
+				  utils/strings.c \
+				  utils/memory.c \
   				  lexer/lexer.c \
   				  expander/expander.c \
   				  expander/quotes.c \
