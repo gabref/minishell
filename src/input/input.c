@@ -6,7 +6,7 @@
 /*   By: ldi-fior <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 16:04:19 by cmaestri          #+#    #+#             */
-/*   Updated: 2024/08/06 09:38:31 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/06 13:51:53 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,6 @@
 #include "../../inc/parser.h"
 #include "../../inc/utils.h"
 #include <unistd.h>
-
-// funzione per pulire lo schermo se l'utente scrive "clear"
-void	clean_screen(void)
-{
-	write(STDOUT_FILENO, "\033[H\033[J", 6);
-}
-
 
 char	*get_prompt_cd(t_minishell *ms)
 {

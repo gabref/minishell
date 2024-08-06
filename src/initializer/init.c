@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:46:40 by galves-f          #+#    #+#             */
-/*   Updated: 2024/08/01 02:47:14 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/06 13:51:39 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	destroy_minishell(t_minishell *ms)
 	return ;
 }
 
-void reset_minishell(t_minishell *ms)
+void	reset_minishell(t_minishell *ms)
 {
 	if (ms->ebt)
 		free_ebt(ms->ebt);

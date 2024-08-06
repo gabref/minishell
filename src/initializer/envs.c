@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 12:57:52 by galves-f          #+#    #+#             */
-/*   Updated: 2024/08/01 03:55:44 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/06 13:50:48 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,6 @@ static char	*default_env_value(char *key)
 	return (ft_strdup(""));
 }
 
-/*
-TODO: when env is NULL, create a new env with the default values
-*/
 static t_list	*create_env_node(char *key, char **env)
 {
 	t_env	*env_s;
