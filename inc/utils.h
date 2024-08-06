@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:33:51 by galves-f          #+#    #+#             */
-/*   Updated: 2024/08/06 13:57:47 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/06 14:46:20 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,7 @@ void	substitute_str(char **str, int start, int end, char *sub);
 int		find_string_2d_array(char *str, char **arr);
 bool	string_all_spaces(char *str);
 bool	free_and_return_bool(void *ptr, bool ret);
+void	join_string(char **str, char *to_join);
+void	add_string(char ***array, char *str);
 
 #endif

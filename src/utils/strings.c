@@ -6,7 +6,7 @@
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 14:00:50 by galves-f          #+#    #+#             */
-/*   Updated: 2024/08/06 14:03:25 by galves-f         ###   ########.fr       */
+/*   Updated: 2024/08/06 14:47:45 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,16 +77,51 @@ void	substitute_str(char **str, int start, int end, char *sub)
 	*str = newstr;
 }
 
-bool	string_all_spaces(char *str)
+void	add_string(char ***array, char *str)
 {
-	int	i;
+	int		i;
+	char	**new_array;
 
 	i = 0;
-	while (str[i])
+	if (*array)
+		while ((*array)[i])
+			i++;
+	new_array = safe_malloc(sizeof(char *) * (i + 2));
+	i = 0;
+	if (*array)
 	{
-		if (str[i] != ' ' && str[i] != '\t' && str[i] != '\n' && str[i] != '\r')
-			return (false);
-		i++;
+		while ((*array)[i])
+		{
+			new_array[i] = (*array)[i];
+			i++;
+		}
+		free(*array);
 	}
-	return (true);
+	new_array[i] = str;
+	new_array[i + 1] = NULL;
+	*array = new_array;
+}
+
+void	join_string(char **str, char *to_join)
+{
+	int		i;
+	int		j;
+	char	*new_str;
+
+	i = 0;
+	j = 0;
+	while (*(*str + i))
+		i++;
+	while (to_join[j])
+		j++;
+	new_str = malloc(sizeof(char) * (i + j + 1));
+	i = -1;
+	while (*(*str + ++i))
+		new_str[i] = *(*str + i);
+	free(*str);
+	j = 0;
+	while (to_join[j])
+		new_str[i++] = to_join[j++];
+	new_str[i] = '\0';
+	*str = new_str;
 }

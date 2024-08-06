@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   globals.c                                          :+:      :+:    :+:   */
+/*   parser_ebt_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/06 14:01:39 by galves-f          #+#    #+#             */
-/*   Updated: 2024/08/06 14:47:09 by galves-f         ###   ########.fr       */
+/*   Created: 2024/08/06 14:55:29 by galves-f          #+#    #+#             */
+/*   Updated: 2024/08/06 14:55:38 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../inc/minishell.h"
+#include "../../inc/parser.h"
 #include "../../inc/utils.h"
 
-static int	g_signal;
-
-void	set_global_signal(int signum)
+t_ebt	*create_ebt(void)
 {
-	g_signal = signum;
-}
+	t_ebt	*ebt;
 
-int	get_global_signal(void)
-{
-	return (g_signal);
+	ebt = safe_malloc(sizeof(t_ebt));
+	ebt->type = EBT_OP_COMMAND;
+	ebt->command = NULL;
+	ebt->left = NULL;
+	ebt->right = NULL;
+	return (ebt);
 }

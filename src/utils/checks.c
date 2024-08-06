@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   globals.c                                          :+:      :+:    :+:   */
+/*   checks.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galves-f <galves-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/06 14:01:39 by galves-f          #+#    #+#             */
-/*   Updated: 2024/08/06 14:47:09 by galves-f         ###   ########.fr       */
+/*   Created: 2024/08/06 14:47:13 by galves-f          #+#    #+#             */
+/*   Updated: 2024/08/06 14:47:27 by galves-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/utils.h"
 
-static int	g_signal;
-
-void	set_global_signal(int signum)
+bool	string_all_spaces(char *str)
 {
-	g_signal = signum;
-}
+	int	i;
 
-int	get_global_signal(void)
-{
-	return (g_signal);
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] != ' ' && str[i] != '\t' && str[i] != '\n' && str[i] != '\r')
+			return (false);
+		i++;
+	}
+	return (true);
 }

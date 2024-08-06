@@ -65,4 +65,27 @@ void				free_lexer(t_lexer *lex);
 void				test_print_token(void *ptr);
 void				ms_print_lexer(t_lexer *lex);
 
+t_token				*create_empty_token(void);
+t_lexer				*create_lexer(void);
+t_token				*create_token(char *value, t_token_type type,
+						int input_start_idx, int current_idx);
+
+void	lexer_skip_whitespace(t_lexer *lexer, char *input);
+void	lexer_push_advance(t_lexer *lex, t_token *token, char *input);
+bool	ft_isspace(char c);
+bool	is_parenthesis(char c);
+bool	is_dollar(char c);
+bool	is_quote(char c);
+bool	is_operator(char c);
+bool	is_single_alone_operator(char c);
+bool	is_single_operator(char *input, int idx);
+bool	is_double_operator(char *input, int idx);
+bool	lexer_create_double_operator(t_lexer *lex, char *input);
+bool	lexer_create_single_alone_operator(t_lexer *lex, char *input);
+bool	lexer_create_operator(t_lexer *lex, char *input);
+bool	lexer_create_parenthesis(t_lexer *lex, char *input);
+bool	lexer_create_word(t_lexer *lex, char *input);
+bool	lexer_create_between_quotes(t_lexer *lex, char *input);
+bool	lexer_create_dollar(t_lexer *lex, char *input);
+
 #endif
